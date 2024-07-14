@@ -51,7 +51,7 @@ const BatchDetailsPage = ({ params }: BatchDetailsPageProps) => {
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="ghost" size={"sm"} className="rounded-full p-2">
+            <Button variant="ghost"  size={"sm"} className="rounded-full p-2">
               <Plus />
             </Button>
           </PopoverTrigger>
