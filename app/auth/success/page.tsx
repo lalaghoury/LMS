@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { signin } from "@/lib/features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useAppDispatch } from "@/lib/hooks";
+import Cookies from "js-cookie";
 
 const page = () => {
   const dispatch = useAppDispatch();
@@ -15,16 +15,18 @@ const page = () => {
   useEffect(() => {
     const token = getTokenFromURL();
     axios.defaults.withCredentials = true;
-    document.cookie = `token=${token}; path=/;`;
+    document.cookie = `auth=${token}; path=/;`;
 
     const getUser = async () => {
       try {
+        const redirectUrl = Cookies.get("redirectUrl");
+
         const { data } = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/auth/verify`
         );
         if (data.success) {
           dispatch(signin({ user: data.user }));
-          router.push("/");
+          router.replace(redirectUrl ? redirectUrl : "/dashboard");
         }
       } catch (error: any) {
         console.log(error.response.data.message || error.message);

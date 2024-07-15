@@ -16,12 +16,12 @@ import AddNewStudentsDialog from "@/components/dashboard/AddNewStudentsDialog";
 
 interface BatchDetailsPageProps {
   params: {
-    id: string;
+    batchId: string;
   };
 }
 
 const BatchDetailsPage = ({ params }: BatchDetailsPageProps) => {
-  const { id } = params;
+  const { batchId } = params;
   const [assDialogOpen, setAssDialogOpen] = useState(false);
   const [addNewStudentsDialog, setAddNewStudentsDialog] = useState(false);
   const dispatch = useAppDispatch();
@@ -30,8 +30,8 @@ const BatchDetailsPage = ({ params }: BatchDetailsPageProps) => {
   );
 
   useEffect(() => {
-    dispatch(batchThunks.getABatchById(id));
-  }, [dispatch, id]);
+    dispatch(batchThunks.getABatchById(batchId));
+  }, [dispatch, batchId]);
 
   if (loading) {
     return <div>Loading...</div>;

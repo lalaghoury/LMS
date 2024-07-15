@@ -109,7 +109,6 @@ export const authSlice = createSlice({
         state.error = null;
       })
       .addCase(authThunks.signout.fulfilled, (state) => {
-        window.location.href = "/auth/sign-in";
         state.loading = false;
         document.cookie = "auth=; path=/;";
         localStorage.removeItem("auth");

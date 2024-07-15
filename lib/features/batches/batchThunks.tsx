@@ -94,7 +94,6 @@ export const batchThunks = {
         const { data } = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/batches/get-single/${id}`
         );
-        console.log("🚀 ~ data:", data)
         if (data.success) {
           return data.batch;
         }

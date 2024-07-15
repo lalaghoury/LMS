@@ -9,20 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { CheckIcon, ClipboardList, ClipboardCopy } from "lucide-react";
-import { Label } from "@radix-ui/react-dropdown-menu";
-import {
-  Command,
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandSeparator,
-} from "@/components/ui/command";
-import { students } from "@/constants/CreateBatch";
-import { cn } from "@/lib/utils";
+import { ClipboardCopy, Trash2 } from "lucide-react";
 import axios from "axios";
 import { messageSuccess } from "../message";
 import { Separator } from "../ui/separator";
@@ -61,6 +48,20 @@ const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
     } else {
       setRecipients([...recipients, ...newRecipients]);
       setInputValue("");
+    }
+  };
+
+  const sendReq = async () => {
+    try {
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/batches/invitation/6692734dbc65522f7ce6c28c`,
+        {
+          emails: recipients,
+        }
+      );
+      console.log("🚀 ~ sendReq ~ data:", data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -112,11 +113,7 @@ const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
           />
           <Separator className="my-4" />
           <button
-            onClick={(event) => {
-              {
-                handleAddRecipients;
-              }
-            }}
+            onClick={handleAddRecipients}
             className="w-full px-2 py-1 mb-4 bg-green-500 text-white rounded"
           >
             Add Recipients
@@ -128,9 +125,15 @@ const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
             {recipients.map((recipient, index) => (
               <li
                 key={index}
-                className="flex items-center px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                className="flex items-center justify-between px-2 py-1 hover:bg-gray-100 cursor-pointer"
               >
                 <span className="mr-2">{recipient}</span>
+                <Trash2
+                  className="w-5 h-5 cursor-pointer"
+                  onClick={() => {
+                    setRecipients(recipients.filter((r) => r !== recipient));
+                  }}
+                />
               </li>
             ))}
           </ul>
@@ -142,7 +145,7 @@ const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
           >
             Cancel
           </Button>
-          <Button type="submit">Invite</Button>
+          <Button onClick={sendReq}>Invite</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

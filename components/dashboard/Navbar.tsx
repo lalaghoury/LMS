@@ -14,7 +14,7 @@ export const Navbar = ({
   isCollapsed: boolean;
 }) => {
   return (
-    <header className="w-full min-h-10  flex items-center justify-between dark:bg-slate-800">
+    <header className="w-full min-h-10  flex items-center justify-between bg-background">
       <div className="flex items-center space-x-3">
         <Menu
           className="cursor-pointer"

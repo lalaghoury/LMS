@@ -15,6 +15,9 @@ export async function middleware(req: NextRequest, res: NextResponse) {
     );
 
     if (data.success) {
+      // if (req.nextUrl.pathname === "/") {
+      //   return NextResponse.rewrite(new URL("/dashboard", req.url));
+      // }
       return;
     }
   } catch (error: any) {
@@ -25,5 +28,6 @@ export async function middleware(req: NextRequest, res: NextResponse) {
 }
 
 export const config = {
+  // matcher: ["/dashboard/:route*", "/", "/auth/:route*"],
   matcher: ["/dashboard/:route*"],
 };

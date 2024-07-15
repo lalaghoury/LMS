@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icons } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +31,14 @@ export default function SignUpPage() {
       setPassword(e.target.value);
     }
   };
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const redirectUrlFromQuery = searchParams.get("redirectUrl");
+    if (redirectUrlFromQuery) {
+      document.cookie = `redirectUrl=${redirectUrlFromQuery}; path=/;`;
+    }
+  }, []);
 
   return (
     <div className="flex items-center justify-center w-full h-screen">
