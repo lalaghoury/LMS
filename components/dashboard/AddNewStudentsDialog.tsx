@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,30 +8,39 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ClipboardCopy, Trash2 } from "lucide-react";
-import axios from "axios";
-import { messageSuccess } from "../message";
 import { Separator } from "../ui/separator";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { studentsThunks } from "@/lib/features/students/studentsThunks";
+import { ReactMultiEmail } from "react-multi-email";
+import "react-multi-email/dist/style.css";
+import { useRouter } from "next/navigation";
+import { Icons } from "../ui/icons";
+import { Input } from "../ui/input";
 
 interface AddNewStudentsDialogProps {
   setAddNewStudentsDialog: React.Dispatch<React.SetStateAction<boolean>>;
   addNewStudentsDialog: boolean;
+  batchId: string;
 }
 
 const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
   setAddNewStudentsDialog,
   addNewStudentsDialog,
+  batchId,
 }) => {
-  const [recipients, setRecipients] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState<string>("");
+  const [emails, setEmails] = useState<string[]>([]);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { loading, code } = useAppSelector((state) => state.students);
 
-  const copyToClipboard = ({ linkToCopy }: { linkToCopy: string }) => {
-    navigator.clipboard.writeText(linkToCopy).then(
+  useEffect(() => {
+    dispatch(studentsThunks.generateInviteCode({ batchId }));
+  }, [batchId, dispatch]);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(code).then(
       () => {
         alert("Link copied!");
       },
@@ -41,28 +50,8 @@ const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
     );
   };
 
-  const handleAddRecipients = () => {
-    const newRecipients = inputValue.split(",").map((email) => email.trim());
-    if (recipients.length + newRecipients.length > 5) {
-      alert("You can only add up to 5 recipients.");
-    } else {
-      setRecipients([...recipients, ...newRecipients]);
-      setInputValue("");
-    }
-  };
-
-  const sendReq = async () => {
-    try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/batches/invitation/6692734dbc65522f7ce6c28c`,
-        {
-          emails: recipients,
-        }
-      );
-      console.log("🚀 ~ sendReq ~ data:", data);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleAddRecipientsDispatch = () => {
+    dispatch(studentsThunks.inviteStudents({ emails, router, batchId }));
   };
 
   return (
@@ -83,20 +72,15 @@ const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
           <h3>Invitation link</h3>
 
           <div className="flex gap-1 items-center">
-            <input
+            <Input
               type="text"
-              value="https://classroom.google.com/c/Njk4MjIwMjUzMjM0?c=clhbz..."
+              value={code}
               readOnly
               className="w-full px-2 py-1 border rounded-l"
             />
             <ClipboardCopy
               className="w-5 h-5 cursor-pointer"
-              onClick={() =>
-                copyToClipboard({
-                  linkToCopy:
-                    "https://classroom.google.com/c/Njk4MjIwMjUzMjM0?cjc=clhbzjd",
-                })
-              }
+              onClick={copyToClipboard}
             />
           </div>
 
@@ -104,34 +88,61 @@ const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
         </div>
 
         <div className="space-y-2 py-4">
-          <Input
-            type="text"
-            value={inputValue}
-            onChange={handleInputChange}
-            placeholder="Type email addresses, separated by commas"
-            className="w-full px-2 py-1 mb-4 border rounded"
-          />
-          <Separator className="my-4" />
-          <button
-            onClick={handleAddRecipients}
-            className="w-full px-2 py-1 mb-4 bg-green-500 text-white rounded"
-          >
-            Add Recipients
-          </button>
+          <form>
+            <h3>Email</h3>
+            <ReactMultiEmail
+              placeholder="Input your email"
+              emails={emails}
+              onChange={(_emails: string[]) => {
+                setEmails(_emails);
+              }}
+              autoFocus={true}
+              getLabel={(email, index, removeEmail) => {
+                return (
+                  <div data-tag key={index}>
+                    <div data-tag-item>{email}</div>
+                    <span data-tag-handle onClick={() => removeEmail(index)}>
+                      ×
+                    </span>
+                  </div>
+                );
+              }}
+            />
+            <br />
+            <Separator className="my-2" />
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                e.currentTarget.blur();
+                const input = document.querySelector(
+                  "input[placeholder='Input your email']"
+                );
+                if (input) {
+                  input.focus();
+                  input.setSelectionRange(0, 0);
+                }
+              }}
+              className="w-full"
+            >
+              Add Recipients
+            </Button>
+          </form>
         </div>
 
         <div className="space-y-2 py-4">
+          <Separator className="my-2" />
+
           <ul className="max-h-40 overflow-y-auto">
-            {recipients.map((recipient, index) => (
+            {emails.map((email, index) => (
               <li
                 key={index}
                 className="flex items-center justify-between px-2 py-1 hover:bg-gray-100 cursor-pointer"
               >
-                <span className="mr-2">{recipient}</span>
+                <span className="mr-2">{email}</span>
                 <Trash2
                   className="w-5 h-5 cursor-pointer"
                   onClick={() => {
-                    setRecipients(recipients.filter((r) => r !== recipient));
+                    setEmails(emails.filter((e) => e !== email));
                   }}
                 />
               </li>
@@ -145,7 +156,10 @@ const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
           >
             Cancel
           </Button>
-          <Button onClick={sendReq}>Invite</Button>
+          <Button onClick={handleAddRecipientsDispatch} disabled={loading}>
+            {loading && <Icons.spinner className="w-4 h-4 mr-2 animate-spin" />}{" "}
+            {loading ? "Inviting ..." : "Invite"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

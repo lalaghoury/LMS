@@ -5,7 +5,8 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { Icons } from "../ui/icons";
 import { authThunks } from "@/lib/features/auth/authThunks";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
+import { SubmitHandler } from "react-hook-form";
+import { UserSignup } from "@/models/User";
 
 const AuthButton = ({
   name = "",
@@ -26,7 +27,6 @@ const AuthButton = ({
     buttonText: type === "signin" ? "Sign in" : "Sign up",
   };
 
-
   const handleAuth = () => {
     if (type === "signin") {
       dispatch(authThunks.signin({ values: { email, password }, router }));
@@ -46,6 +46,7 @@ const AuthButton = ({
         className="w-full"
         onClick={() => handleAuth()}
         disabled={loading}
+        type="submit"
       >
         {loading && <Icons.spinner className="w-4 h-4 mr-2 animate-spin" />}{" "}
         {loading ? text.loadingText : text.buttonText}
@@ -55,3 +56,20 @@ const AuthButton = ({
 };
 
 export default AuthButton;
+
+export const onSubmit: SubmitHandler<UserSignup> = ({
+  name,
+  email,
+  password,
+}) => {
+  if (type === "signin") {
+    dispatch(authThunks.signin({ values: { email, password }, router }));
+  } else if (type === "signup") {
+    dispatch(
+      authThunks.signup({
+        values: { name, email, password },
+        router,
+      })
+    );
+  }
+};

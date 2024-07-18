@@ -1,12 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/auth/authSlice";
 import batchReducer from "./features/batches/batchSlice";
+import studentsReducer from "./features/students/studentsSlice";
+import assignmentsReducer from "./features/assignments/assignmentsSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       auth: authReducer,
       batches: batchReducer,
+      students: studentsReducer,
+      assignments: assignmentsReducer,
     },
   });
 };

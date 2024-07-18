@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import BatchesCard from "@/components/batches/BatchesCard";
 import NoBatchesFoundCard from "@/components/batches/NoBatchesFoundCard";
 
-const Batches = () => {
+const BatchesOfTeacher = () => {
   const dispatch = useAppDispatch();
   const { loading, batches } = useAppSelector((state) => state.batches);
 
@@ -18,16 +18,18 @@ const Batches = () => {
   if (loading) return <SkeletonCard />;
 
   if (batches.length === 0) return <NoBatchesFoundCard />;
+
+
   return (
     <div className="w-full h-full flex flex-wrap gap-4 py-2 ">
       {batches.map((batch: any) => (
-        <BatchesCard batch={batch} />
+        <BatchesCard batch={batch} isTeacher={true} route={`teaching`} />
       ))}
     </div>
   );
 };
 
-export default Batches;
+export default BatchesOfTeacher;
 
 export function SkeletonCard() {
   return (

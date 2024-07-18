@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { CheckIcon, ClipboardList } from "lucide-react";
+import { CheckIcon, ClipboardList, Trash2 } from "lucide-react";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import {
   Command,
@@ -25,23 +25,32 @@ import {
 } from "@/components/ui/command";
 import { students } from "@/constants/CreateBatch";
 import { cn } from "@/lib/utils";
-import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { assignmentThunks } from "@/lib/features/assignments/assignmentThunks";
+import { Icons } from "../ui/icons";
+import { useToast } from "@/components/ui/use-toast";
 
 interface AssignmentCreationDialogProps {
   assDialogOpen: boolean;
   setAssDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  batchId: string;
 }
 
 const AssignmentCreationDialog: React.FC<AssignmentCreationDialogProps> = ({
   assDialogOpen,
   setAssDialogOpen,
+  batchId,
 }) => {
   const [title, setTitle] = useState<string>("");
   const [instructions, setInstructions] = useState<string>("");
   const [attachments, setAttachments] = useState<File[]>([]);
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
-  const [courseId, setCourseId] = useState("1");
-  const [teacherId, setTeacherId] = useState("1");
+
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.assignments);
+  const { toast } = useToast();
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -49,27 +58,24 @@ const AssignmentCreationDialog: React.FC<AssignmentCreationDialogProps> = ({
     }
   };
 
-  const handleAssCreation = () => {
-    try {
-      const formData = new FormData();
-      attachments.forEach((file, index) => {
-        formData.append(`files`, file);
-      });
-      formData.append("title", title);
-      formData.append("instructions", instructions);
-      formData.append("courseId", courseId);
-      formData.append("teacherId", teacherId);
-      for (const student of selectedStudents) {
-        formData.append("students", student);
-      }
-
-      axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/assignments/new`,
-        formData
-      );
-    } catch (error) {
-      console.error("Error creating assignment:", error);
+  const handleAssCreation = async () => {
+    const formData = new FormData();
+    attachments.forEach((file) => {
+      formData.append(`files`, file);
+    });
+    formData.append("title", title);
+    formData.append("instructions", instructions);
+    for (const student of selectedStudents) {
+      formData.append("students", student);
     }
+
+    dispatch(
+      assignmentThunks.createAssignment({
+        formData,
+        router,
+        batchId,
+      })
+    );
   };
 
   return (
@@ -119,11 +125,39 @@ const AssignmentCreationDialog: React.FC<AssignmentCreationDialogProps> = ({
               />
               <div className="mt-4">
                 <Label>Attach Files</Label>
-                <Input type="file" onChange={handleFileChange} multiple />
+                <Input
+                  type="file"
+                  onChange={(e) => {
+                    const newAttachments = Array.from(e.target.files!);
+                    if (newAttachments.length + attachments.length <= 10) {
+                      handleFileChange(e);
+                    } else {
+                      toast({
+                        title: "File Upload Error",
+                        description: "You can only upload 10 files ...",
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                  multiple
+                />
                 {attachments.length > 0 && (
-                  <div className="mt-2 text-sm text-gray-500">
+                  <div className="mt-2 text-sm space-y-2">
                     {attachments.map((file, index) => (
-                      <p key={index}>{file.name}</p>
+                      <div
+                        key={index}
+                        className="flex items-center justify-between"
+                      >
+                        <p>{file.name}</p>
+                        <Trash2
+                          className="w-5 h-5 cursor-pointer"
+                          onClick={() => {
+                            setAttachments(
+                              attachments.filter((_, i) => i !== index)
+                            );
+                          }}
+                        />
+                      </div>
                     ))}
                   </div>
                 )}
@@ -141,8 +175,9 @@ const AssignmentCreationDialog: React.FC<AssignmentCreationDialogProps> = ({
           <Button onClick={() => setAssDialogOpen(!assDialogOpen)}>
             Cancel
           </Button>
-          <Button type="submit" onClick={handleAssCreation}>
-            Assign
+          <Button disabled={loading} onClick={handleAssCreation}>
+            {loading && <Icons.spinner className="w-4 h-4 mr-2 animate-spin" />}{" "}
+            {loading ? "Assigning..." : "Assign"}
           </Button>
         </DialogFooter>
       </DialogContent>

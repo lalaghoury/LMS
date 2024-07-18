@@ -51,30 +51,7 @@ const BatchDetailsPage = ({ params }: BatchDetailsPageProps) => {
 
         <h1 className="text-3xl font-bold">{batch?.name}</h1>
 
-        {batch?.owner?._id === _id && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="ghost" size={"sm"} className="rounded-full p-2">
-                <Plus />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="gap-2 space-y-2 mr-0 w-72">
-              <div className="grid gap-4">
-                <AssignmentCreationDialog
-                  assDialogOpen={assDialogOpen}
-                  setAssDialogOpen={setAssDialogOpen}
-                />
-              </div>
-
-              <div className="grid gap-4">
-                <AddNewStudentsDialog
-                  addNewStudentsDialog={addNewStudentsDialog}
-                  setAddNewStudentsDialog={setAddNewStudentsDialog}
-                />
-              </div>
-            </PopoverContent>
-          </Popover>
-        )}
+      
       </div>
     </div>
   );

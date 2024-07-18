@@ -8,13 +8,24 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  createBatchConstants,
-  createBatchStyles,
-} from "@/constants/CreateBatch";
+import { createBatchConstants } from "@/constants/CreateBatch";
 import { batchThunks } from "@/lib/features/batches/batchThunks";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { Icons } from "../ui/icons";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { BatchCreationSchema } from "@/models/Batch";
+import type { BatchCreation } from "@/models/Batch";
+import { useRouter } from "next/navigation";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+
+const createBatchStyles = {
+  label:
+    "absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1",
+  input:
+    "block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer",
+};
 
 export const CreateBatchDialog = ({
   setCreateBatchDialogVisibility,
@@ -25,25 +36,33 @@ export const CreateBatchDialog = ({
 }) => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.batches.loading);
+  const router = useRouter();
 
   const handleCreateBatch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const form = e.target as HTMLFormElement;
-    let values = Object.fromEntries(
-      Array.from(form.elements).map((element) => {
-        if (element.name === "") {
-          return [element.name, undefined];
-        }
-        return [element.name, (element as HTMLInputElement).value];
-      })
-    );
-    values = Object.fromEntries(
-      Object.entries(values).filter(([_, value]) => value !== undefined)
-    );
-
     dispatch(batchThunks.createBatch(values));
     setCreateBatchDialogVisibility(!createBatchDialogVisibility);
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<BatchCreation>({
+    resolver: zodResolver(BatchCreationSchema),
+  });
+
+  const onSubmit: SubmitHandler<BatchCreation> = ({
+    name,
+    section,
+    subject,
+    room,
+  }) => {
+    dispatch(
+      batchThunks.createBatch({
+        values: { name, section, subject, room },
+        router,
+      })
+    );
   };
 
   return (
@@ -56,27 +75,27 @@ export const CreateBatchDialog = ({
           <DialogTitle>Create class</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleCreateBatch} className="grid gap-4 py-2">
-          {createBatchConstants.map(
-            ({ label, name, type, required = false }, index) => (
-              <div key={index} className="relative">
-                <input
-                  type={type}
-                  id={`floating-${index}`}
-                  className={`${createBatchStyles.input}`}
-                  placeholder=" "
-                  required={required}
-                  name={name}
-                />
-                <label
-                  htmlFor={`floating-${index}`}
-                  className={`${createBatchStyles.label}`}
-                >
-                  {label}
-                </label>
-              </div>
-            )
-          )}
+        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-2">
+          {createBatchConstants.map(({ label, name }, index) => (
+            <div key={index} className="relative">
+              <Input
+                type={"text"}
+                id={`floating-${index}`}
+                className={`${createBatchStyles.input}`}
+                placeholder=" "
+                {...register(name)}
+              />
+              <Label htmlFor={name} className={`${createBatchStyles.label}`}>
+                {label}
+              </Label>
+
+              {errors[name] && (
+                <p className="bg-yellow-100 text-red-500 italic px-2 py-1 rounded-md self-start">
+                  {errors[name]?.message}
+                </p>
+              )}
+            </div>
+          ))}
 
           <DialogFooter>
             <Button onClick={() => setCreateBatchDialogVisibility(false)}>

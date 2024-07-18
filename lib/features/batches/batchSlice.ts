@@ -5,10 +5,32 @@ import { messageError } from "@/components/message";
 
 // Define a type for the slice state
 interface batchSlice {
-  batches: [object] | [];
+  batches:
+    | [
+        {
+          name: string;
+          section: string;
+          subject: string;
+          room: string;
+          owner: {
+            _id: string;
+            name: string;
+          };
+        }
+      ]
+    | [];
   loading: boolean;
   error: string | null;
-  singleBatch?: object;
+  singleBatch?: {
+    name: string;
+    section: string;
+    subject: string;
+    room: string;
+    owner: {
+      _id: string;
+      name: string;
+    };
+  };
 }
 
 // Define the initial state using that type
@@ -18,7 +40,13 @@ const initialState: batchSlice = {
   error: null,
   singleBatch: {
     name: "",
-    
+    section: "",
+    subject: "",
+    room: "",
+    owner: {
+      _id: "",
+      name: "",
+    },
   },
 };
 
@@ -32,19 +60,27 @@ export const batchSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(batchThunks.getAllBatches.pending, (state) => {
+      .addCase(batchThunks.getAllBatchesAsStudent.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(batchThunks.editBatch.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(batchThunks.deleteBatch.pending, (state) => {
+      .addCase(batchThunks.getAllBatchesAsTeacherOrOwner.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(batchThunks.getABatchById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(batchThunks.joinIntoBatchByBatchCode.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(batchThunks.getABatchByIdAsTeacherOrOwner.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(batchThunks.getABatchByIdAsStudent.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
@@ -57,34 +93,43 @@ export const batchSlice = createSlice({
         }
       )
       .addCase(
-        batchThunks.getAllBatches.fulfilled,
+        batchThunks.getAllBatchesAsStudent.fulfilled,
         (state, action: PayloadAction<any>) => {
           state.loading = false;
           state.batches = action.payload;
         }
       )
       .addCase(
-        batchThunks.editBatch.fulfilled,
+        batchThunks.getAllBatchesAsTeacherOrOwner.fulfilled,
         (state, action: PayloadAction<any>) => {
           state.loading = false;
-          const index = state.batches.findIndex(
-            (batch) => batch._id === action.payload._id
-          );
-          state.batches[index] = action.payload;
-        }
-      )
-      .addCase(
-        batchThunks.deleteBatch.fulfilled,
-        (state, action: PayloadAction<any>) => {
-          state.loading = false;
-          state.batches = state.batches.filter(
-            (batch) => batch._id !== action.payload
-          );
+          state.batches = action.payload;
         }
       )
       .addCase(
         batchThunks.getABatchById.fulfilled,
         (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.singleBatch = action.payload;
+        }
+      )
+      .addCase(
+        batchThunks.joinIntoBatchByBatchCode.fulfilled,
+        (state, action: PayloadAction<object>) => {
+          state.loading = false;
+          state.batches.push(action.payload);
+        }
+      )
+      .addCase(
+        batchThunks.getABatchByIdAsTeacherOrOwner.fulfilled,
+        (state, action: PayloadAction<object>) => {
+          state.loading = false;
+          state.singleBatch = action.payload;
+        }
+      )
+      .addCase(
+        batchThunks.getABatchByIdAsStudent.fulfilled,
+        (state, action: PayloadAction<object>) => {
           state.loading = false;
           state.singleBatch = action.payload;
         }
@@ -99,7 +144,7 @@ export const batchSlice = createSlice({
         }
       )
       .addCase(
-        batchThunks.getAllBatches.rejected,
+        batchThunks.getAllBatchesAsStudent.rejected,
         (state, action: PayloadAction<any>) => {
           state.loading = false;
           state.error = action.payload;
@@ -107,15 +152,7 @@ export const batchSlice = createSlice({
         }
       )
       .addCase(
-        batchThunks.editBatch.rejected,
-        (state, action: PayloadAction<any>) => {
-          state.loading = false;
-          state.error = action.payload;
-          messageError(action.payload);
-        }
-      )
-      .addCase(
-        batchThunks.deleteBatch.rejected,
+        batchThunks.getAllBatchesAsTeacherOrOwner.rejected,
         (state, action: PayloadAction<any>) => {
           state.loading = false;
           state.error = action.payload;
@@ -124,6 +161,30 @@ export const batchSlice = createSlice({
       )
       .addCase(
         batchThunks.getABatchById.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
+        }
+      )
+      .addCase(
+        batchThunks.joinIntoBatchByBatchCode.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
+        }
+      )
+      .addCase(
+        batchThunks.getABatchByIdAsTeacherOrOwner.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
+        }
+      )
+      .addCase(
+        batchThunks.getABatchByIdAsStudent.rejected,
         (state, action: PayloadAction<any>) => {
           state.loading = false;
           state.error = action.payload;

@@ -1,5 +1,4 @@
 import { messageSuccess } from "@/components/message";
-import { getABatchById } from "@/helpers/get-batch";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 axios.defaults.withCredentials = true;
@@ -8,11 +7,17 @@ export const batchThunks = {
   createBatch: createAsyncThunk(
     "batches/createBatch",
     async (
-      values: {
-        name: string;
-        description: string;
-        room: string;
-        section: string;
+      {
+        values,
+        router,
+      }: {
+        values: {
+          name: string;
+          section: string;
+          subject: string;
+          room: string;
+        };
+        router: any;
       },
       { rejectWithValue }
     ) => {
@@ -23,7 +28,7 @@ export const batchThunks = {
         );
         if (data.success) {
           messageSuccess(data.message);
-          window.location.href = `/dashboard/batches/${data.batch._id}`;
+          router.push(`/dashboard/batches/teaching/${data.batch._id}`);
           return data.batch;
         }
       } catch (error: any) {
@@ -32,12 +37,12 @@ export const batchThunks = {
       }
     }
   ),
-  getAllBatches: createAsyncThunk(
-    "batches/getAllBatches",
+  getAllBatchesAsTeacherOrOwner: createAsyncThunk(
+    "batches/getAllBatchesAsTeacherOrOwner",
     async (_, { rejectWithValue }) => {
       try {
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/batches/all`
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/teaching/all`
         );
         if (data.success) {
           return data.batches;
@@ -48,42 +53,19 @@ export const batchThunks = {
       }
     }
   ),
-  editBatch: createAsyncThunk(
-    "batches/editBatch",
-    async (
-      { values, id }: { values: object; id: string },
-      { rejectWithValue }
-    ) => {
+  getAllBatchesAsStudent: createAsyncThunk(
+    "batches/getAllBatchesAsStudent",
+    async (_, { rejectWithValue }) => {
       try {
-        const { data } = await axios.put(
-          `${process.env.NEXT_PUBLIC_API_URL}/batches/update/${id}`,
-          values
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/enrolled/all`
         );
         if (data.success) {
-          messageSuccess(data.message);
-          window.location.href = "/dashboard/batches";
-          return data.batch;
+          return data.batches;
         }
       } catch (error: any) {
-        console.error("Error Editing Batch:", error.response.data.message);
-        return rejectWithValue("Error Editing Batch, please try again!");
-      }
-    }
-  ),
-  deleteBatch: createAsyncThunk(
-    "batches/deleteBatch",
-    async (id: string, { rejectWithValue }) => {
-      try {
-        const { data } = await axios.delete(
-          `${process.env.NEXT_PUBLIC_API_URL}/batches/delete/${id}`
-        );
-        if (data.success) {
-          messageSuccess(data.message);
-          return true;
-        }
-      } catch (error: any) {
-        console.error("Error Deleting Batch:", error.response.data.message);
-        return rejectWithValue("Error Deleting Batch, please try again!");
+        console.error("Error Getting Batches:", error.response.data.message);
+        return rejectWithValue("Error Getting Batches, please try again!");
       }
     }
   ),
@@ -98,8 +80,73 @@ export const batchThunks = {
           return data.batch;
         }
       } catch (error: any) {
-        console.error("Error Deleting Batch:", error.response.data.message);
-        return rejectWithValue("Error Deleting Batch, please try again!");
+        console.error("Error Getting Batch:", error.response.data.message);
+        return rejectWithValue(
+          error.response.data.message ??
+            "Error Getting Batch, please try again!"
+        );
+      }
+    }
+  ),
+  joinIntoBatchByBatchCode: createAsyncThunk(
+    "batches/joinIntoBatchByBatchCode",
+    async (
+      { code, router }: { code: string; router: any },
+      { rejectWithValue }
+    ) => {
+      try {
+        const { data } = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/invitation/join/${code}`
+        );
+        if (data.success) {
+          messageSuccess(data.message);
+          router.push(`/dashboard/batches/enrolled/${data.batch._id}`);
+          return data.batch;
+        }
+      } catch (error: any) {
+        console.error("Error Joining Batch:", error.response.data.message);
+        return rejectWithValue(
+          error.response.data.message ??
+            "Error Joining Batch, please try again!"
+        );
+      }
+    }
+  ),
+  getABatchByIdAsTeacherOrOwner: createAsyncThunk(
+    "batches/getABatchByIdAsTeacherOrOwner",
+    async (id: string, { rejectWithValue }) => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/teaching/${id}`
+        );
+        if (data.success) {
+          return data.batch;
+        }
+      } catch (error: any) {
+        console.error("Error Getting Batch:", error.response.data.message);
+        return rejectWithValue(
+          error.response.data.message ??
+            "Error Getting Batch, please try again!"
+        );
+      }
+    }
+  ),
+  getABatchByIdAsStudent: createAsyncThunk(
+    "batches/getABatchByIdAsStudent",
+    async (id: string, { rejectWithValue }) => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/enrolled/${id}`
+        );
+        if (data.success) {
+          return data.batch;
+        }
+      } catch (error: any) {
+        console.error("Error Getting Batch:", error.response.data.message);
+        return rejectWithValue(
+          error.response.data.message ??
+            "Error Getting Batch, please try again!"
+        );
       }
     }
   ),

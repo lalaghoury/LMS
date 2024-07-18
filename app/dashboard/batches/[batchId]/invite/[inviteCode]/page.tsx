@@ -5,6 +5,10 @@ import { batchThunks } from "@/lib/features/batches/batchThunks";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import axios from "axios";
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { messageSuccess } from "@/components/message";
+import Cookies from "js-cookie";
+import { studentsThunks } from "@/lib/features/students/studentsThunks";
 
 interface InvitationAcceptorProps {
   params: {
@@ -15,6 +19,7 @@ interface InvitationAcceptorProps {
 
 const InvitationAcceptor = ({ params }: InvitationAcceptorProps) => {
   const { inviteCode, batchId } = params;
+  const router = useRouter();
 
   const dispatch = useAppDispatch();
   const { loading, singleBatch: batch } = useAppSelector(
@@ -26,12 +31,8 @@ const InvitationAcceptor = ({ params }: InvitationAcceptorProps) => {
     dispatch(batchThunks.getABatchById(batchId));
   }, [dispatch, batchId]);
 
-  const verifyInviteCode = async () => {
-    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/batches/invitation/${batchId}/verify-invite/${inviteCode}`, {batchId});
-    if (data.success) {
-      // window.location.href = `/dashboard/batches/${batchId}`;
-      alert(data.message);
-    }
+  const verifyInviteCode = () => {
+    dispatch(studentsThunks.verifyInviteCode({ inviteCode, batchId, router }));
   };
 
   if (loading) {

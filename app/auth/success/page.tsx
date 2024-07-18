@@ -14,19 +14,22 @@ const page = () => {
 
   useEffect(() => {
     const token = getTokenFromURL();
+    if (token) {
+      Cookies.set("auth", token, { expires: 7, path: "" });
+    }
     axios.defaults.withCredentials = true;
-    document.cookie = `auth=${token}; path=/;`;
 
     const getUser = async () => {
       try {
-        const redirectUrl = Cookies.get("redirectUrl");
-
         const { data } = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/auth/verify`
         );
+
         if (data.success) {
           dispatch(signin({ user: data.user }));
-          router.replace(redirectUrl ? redirectUrl : "/dashboard");
+          const redirectUrl = Cookies.get("redirectUrl");
+          router.push(redirectUrl ? redirectUrl : "/dashboard");
+          redirectUrl && Cookies.remove("redirectUrl");
         }
       } catch (error: any) {
         console.log(error.response.data.message || error.message);

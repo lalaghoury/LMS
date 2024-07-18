@@ -24,16 +24,19 @@ export const authThunks = {
           `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-up`,
           values
         );
-        const { user, message, success } = data;
+        const { message, success } = data;
         if (success) {
           !redirectUrl && messageSuccess(message);
-          dispatch(authThunks.signin({ values, router, redirectUrl }));
+          redirectUrl &&
+            dispatch(authThunks.signin({ values, router, redirectUrl }));
           !redirectUrl && router.push("/auth/sign-in");
           return true;
         }
       } catch (error: any) {
         console.error("Error signing up:", error.response.data.message);
-        return rejectWithValue("Error signing up, please try again");
+        return rejectWithValue(
+          error.response.data.message ?? "Error signing up, please try again"
+        );
       }
     }
   ),
@@ -44,46 +47,52 @@ export const authThunks = {
       {
         values,
         router,
-        redirectUrl,
       }: {
         values: { email: string; password: string };
         router: any;
-        redirectUrl?: string;
       },
       { rejectWithValue, dispatch }
     ) => {
       try {
+        const redirectUrl = Cookies.get("redirectUrl");
+
         const { data } = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in`,
           values
         );
+
         if (data.success) {
-          dispatch(signinAction({ user: data.user }));
           messageSuccess(data.message);
-          const { token } = data;
-          Cookies.set("auth", token, { expires: 7, path: "" });
+          dispatch(signinAction({ user: data.user }));
+          Cookies.set("auth", data.token, { expires: 7, path: "" });
           router.push(redirectUrl ? redirectUrl : "/dashboard");
           return data.user;
         }
       } catch (error: any) {
+        console.log("🚀 ~ error:", error)
         console.error("Error signing in:", error.response.data.message);
-        return rejectWithValue("Error signing in, please try again!");
+        return rejectWithValue(
+          error.response.data.message ?? "Error signing in, please try again!"
+        );
       }
     }
   ),
 
-  signout: createAsyncThunk("auth/signout", async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-out`
-      );
-      if (data.success) {
-        window.location.href = "/auth/sign-in";
-        return true;
+  signout: createAsyncThunk(
+    "auth/signout",
+    async (router: any, { rejectWithValue }) => {
+      try {
+        const { data } = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-out`
+        );
+        if (data.success) {
+          router.push("/auth/sign-in");
+          return true;
+        }
+      } catch (error: any) {
+        console.error("Error logging out:", error.response.data.message);
+        return rejectWithValue(error.response.data.message ?? "Error logging out, please try again!");
       }
-    } catch (error: any) {
-      console.error("Error logging out:", error.response.data.message);
-      return rejectWithValue("Error logging out, please try again!");
     }
-  }),
+  ),
 };

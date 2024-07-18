@@ -13,10 +13,12 @@ import { Button } from "@/components/ui/button";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { authThunks } from "@/lib/features/auth/authThunks";
+import { useRouter } from "next/navigation";
 
 export function UserPopup() {
   const { avatar }: any = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   return (
     <DropdownMenu>
@@ -41,7 +43,7 @@ export function UserPopup() {
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => dispatch(authThunks.signout())}>
+        <DropdownMenuItem onClick={() => dispatch(authThunks.signout(router))}>
           Logout
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -30,7 +30,7 @@ export function BreadcrumbWithCustomSeparator() {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>{batch.name}</BreadcrumbPage>
+          <BreadcrumbPage>{batch?.name}</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

@@ -15,12 +15,17 @@ export async function middleware(req: NextRequest, res: NextResponse) {
     );
 
     if (data.success) {
-      // if (req.nextUrl.pathname === "/") {
-      //   return NextResponse.rewrite(new URL("/dashboard", req.url));
-      // }
-      return;
+      if (
+        req.nextUrl.pathname === "/" ||
+        req.nextUrl.pathname.startsWith("/auth")
+      ) {
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+      }
     }
   } catch (error: any) {
+    if (req.nextUrl.pathname.startsWith("/auth")) {
+      return NextResponse.next();
+    }
     return NextResponse.redirect(new URL("/auth/sign-in", req.url));
   }
 
@@ -28,6 +33,5 @@ export async function middleware(req: NextRequest, res: NextResponse) {
 }
 
 export const config = {
-  // matcher: ["/dashboard/:route*", "/", "/auth/:route*"],
-  matcher: ["/dashboard/:route*"],
+  matcher: ["/dashboard/:route*", "/auth/:route*", "/"],
 };

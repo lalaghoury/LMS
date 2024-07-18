@@ -1,10 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { authThunks } from "./authThunks";
+import { messageError } from "@/components/message";
+import Cookies from "js-cookie";
 
 // Define a type for the slice state
 interface authState {
-  user: object | null;
+  user: {
+    name: string;
+    avatar: string;
+    provider: string;
+    _id: string;
+    email: string;
+  } | null;
   isLoggedIn: boolean;
   loading: boolean;
   verified: boolean;
@@ -13,7 +21,13 @@ interface authState {
 
 // Define the initial state using that type
 const initialState: authState = {
-  user: null,
+  user: {
+    name: "",
+    avatar: "",
+    provider: "",
+    _id: "",
+    email: "",
+  },
   isLoggedIn: false,
   loading: false,
   error: null,
@@ -82,8 +96,10 @@ export const authSlice = createSlice({
         (state, action: PayloadAction<any>) => {
           state.loading = false;
           state.error = action.payload;
+          messageError(action.payload);
         }
       )
+
       .addCase(authThunks.signin.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -102,15 +118,17 @@ export const authSlice = createSlice({
         (state, action: PayloadAction<any>) => {
           state.loading = false;
           state.error = action.payload;
+          messageError(action.payload)
         }
       )
+
       .addCase(authThunks.signout.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(authThunks.signout.fulfilled, (state) => {
         state.loading = false;
-        document.cookie = "auth=; path=/;";
+        Cookies.remove("auth");
         localStorage.removeItem("auth");
         Object.assign(state, initialState);
       })

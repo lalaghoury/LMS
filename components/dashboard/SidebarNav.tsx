@@ -2,15 +2,14 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import { GraduationCap, Users, House, Calendar } from "lucide-react";
+import { GraduationCap, Users, House } from "lucide-react";
 
 export function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
   const links = [
@@ -18,25 +17,19 @@ export function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
       title: "Home",
       label: "",
       icon: House,
-      variant: "default",
-    },
-    {
-      title: "Calendar",
-      label: "",
-      icon: Calendar,
-      variant: "default",
+      location: "/dashboard",
     },
     {
       title: "Teaching",
       label: "",
       icon: Users,
-      variant: "default",
+      location: "/dashboard/batches/teaching",
     },
     {
       title: "Enrolled",
       label: "",
       icon: GraduationCap,
-      variant: "default",
+      location: "/dashboard/batches/enrolled",
     },
   ];
 
@@ -51,15 +44,11 @@ export function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
             <TooltipProvider key={index}>
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
-                  <Link
-                    href="#"
-                    className={cn(
-                      buttonVariants({ variant: link.variant, size: "icon" }),
-                      "h-9 w-9 text-primary-foreground hover:bg-primary/20 dark:text-primary-foreground hover:dark:bg-primary/20"
-                    )}
-                  >
-                    <link.icon className="h-4 w-4" />
-                    <span className="sr-only">{link.title}</span>
+                  <Link href={link.location}>
+                    <Button>
+                      <link.icon className="h-4 w-4" />
+                      <span className="sr-only">{link.title}</span>
+                    </Button>
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent
@@ -72,22 +61,18 @@ export function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
               </Tooltip>
             </TooltipProvider>
           ) : (
-            <Link
-              key={index}
-              href="#"
-              className={cn(
-                buttonVariants({ variant: link.variant, size: "lg" }),
-                "text-primary-foreground hover:bg-primary/20 dark:text-primary-foreground hover:dark:bg-primary/20",
-                "justify-start"
-              )}
-            >
-              <link.icon className="mr-2 h-4 w-4" />
-              {link.title}
-              {link.label && (
-                <span className="ml-auto text-muted-foreground">
-                  {link.label}
-                </span>
-              )}
+            <Link key={index} href={link.location}>
+              <Button
+                className={"flex items-center gap-2 justify-start w-full"}
+              >
+                <link.icon className="mr-2 h-4 w-4" />
+                {link.title}
+                {link.label && (
+                  <span className="ml-auto text-muted-foreground">
+                    {link.label}
+                  </span>
+                )}
+              </Button>
             </Link>
           )
         )}
