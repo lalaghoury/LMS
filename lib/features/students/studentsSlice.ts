@@ -31,6 +31,25 @@ export const studentsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(studentsThunks.getAllStudentsOfABatch.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        studentsThunks.getAllStudentsOfABatch.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.students = action.payload;
+        }
+      )
+      .addCase(
+        studentsThunks.getAllStudentsOfABatch.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
+        }
+      )
       .addCase(studentsThunks.generateInviteCode.pending, (state) => {
         state.loading = true;
         state.error = null;

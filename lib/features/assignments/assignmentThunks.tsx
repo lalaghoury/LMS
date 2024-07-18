@@ -81,16 +81,83 @@ export const assignmentThunks = {
         const { data } = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/batches/assignments/get-single/${assignmentId}`
         );
-
-        if (data.success) {
-          messageSuccess(data.message);
-          return data.assignment;
+        const { success, assignment, isSubmitted, message } = data;
+        if (success) {
+          messageSuccess(message);
+          return { ...assignment, isSubmitted };
         }
       } catch (error: any) {
         console.error("Error Getting Assignment:", error.response.data.message);
         return rejectWithValue(
           error.response.data.message ??
             "Error Getting Assignment, please try again!"
+        );
+      }
+    }
+  ),
+
+  getSubmittedAssignmentByBatchId: createAsyncThunk(
+    "assignments/getSubmittedAssignmentByBatchId",
+    async (
+      { batchId, assignmentId }: { batchId: string; assignmentId: string },
+      { rejectWithValue }
+    ) => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/assignments/submitted/${batchId}/${assignmentId}`
+        );
+        const { success, submission, message } = data;
+        if (success) {
+          messageSuccess(message);
+          return submission;
+        }
+      } catch (error: any) {
+        console.error("Error Getting Assignment:", error.response.data.message);
+        return rejectWithValue(
+          error.response.data.message ??
+            "Error Getting Assignment, please try again!"
+        );
+      }
+    }
+  ),
+
+  handInAsignment: createAsyncThunk(
+    "assignments/handInAsignment",
+    async (
+      {
+        formData,
+        router,
+        assignmentId,
+      }: {
+        formData: {
+          files: File[];
+        };
+        router: any;
+        assignmentId: string;
+      },
+      { rejectWithValue }
+    ) => {
+      try {
+        const { data } = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/assignments/hand-in/${assignmentId}`,
+          formData
+        );
+
+        if (data.success) {
+          messageSuccess(data.message);
+          router.push(
+            `/dashboard/batches/${data.assignment.batchId}/assignments/${assignmentId}/submitted`
+          );
+          return data.assignment;
+        }
+      } catch (error: any) {
+        console.error(
+          "Error Handing In Assignment Assignment:",
+          error.response.data.message
+        );
+        return rejectWithValue(
+          error.response.data.message ??
+            "Error Handing In Assignment, please try again!"
         );
       }
     }

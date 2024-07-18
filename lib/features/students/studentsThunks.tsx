@@ -75,4 +75,20 @@ export const studentsThunks = {
       }
     }
   ),
+  getAllStudentsOfABatch: createAsyncThunk(
+    "students/getAllStudentsOfABatch",
+    async ({ batchId }: { batchId: string }, { rejectWithValue }) => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/students/${batchId}/all`
+        );
+        if (data.success) {
+          return data.students;
+        }
+      } catch (error: any) {
+        console.error("Error Getting Students:", error.response.data.message);
+        return rejectWithValue("Error Getting Students, please try again!");
+      }
+    }
+  ),
 };

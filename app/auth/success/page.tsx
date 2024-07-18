@@ -7,7 +7,7 @@ import { signin } from "@/lib/features/auth/authSlice";
 import { useAppDispatch } from "@/lib/hooks";
 import Cookies from "js-cookie";
 
-const page = () => {
+const OAuthSuccessPage = () => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -77,7 +77,7 @@ const page = () => {
   );
 };
 
-export default page;
+export default OAuthSuccessPage;
 
 const getTokenFromURL = () => {
   const params = new URLSearchParams(window.location.search);

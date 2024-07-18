@@ -8,7 +8,10 @@ import { assignmentThunks } from "@/lib/features/assignments/assignmentThunks";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { Icons } from "@/components/ui/icons";
+import Link from "next/link";
 
 interface AssignmentDetailsPageProps {
   params: {
@@ -22,6 +25,7 @@ const AssignmentDetailsPage = ({ params }: AssignmentDetailsPageProps) => {
   const [attachments, setAttachments] = useState<File[]>([]);
 
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const { loading, singleAssignment: assignment } = useAppSelector(
     (state) => state.assignments
   );
@@ -34,6 +38,23 @@ const AssignmentDetailsPage = ({ params }: AssignmentDetailsPageProps) => {
     if (e.target.files) {
       setAttachments((prev) => [...prev, ...Array.from(e.target.files!)]);
     }
+  };
+
+  const handleAssSubmission = () => {
+    const formData = new FormData();
+    attachments.forEach((file) => {
+      formData.append(`files`, file);
+    });
+
+    dispatch(
+      assignmentThunks.handInAsignment({
+        formData,
+        router,
+        assignmentId,
+      })
+    );
+
+    setAttachments([]);
   };
 
   if (loading) {
@@ -58,6 +79,7 @@ const AssignmentDetailsPage = ({ params }: AssignmentDetailsPageProps) => {
                 alt="Profile"
                 width={48}
                 height={48}
+                className="rounded-full"
               />
             </div>
             <div className="flex flex-col">
@@ -92,37 +114,62 @@ const AssignmentDetailsPage = ({ params }: AssignmentDetailsPageProps) => {
           )}
         </div>
 
-        <div className="border border-gray-300 p-2 space-y-3">
-          <Label>Attach Files</Label>
-          <Input
-            type="file"
-            onChange={(e) => {
-              const newAttachments = Array.from(e.target.files!);
-              if (newAttachments.length + attachments.length <= 10) {
-                handleFileChange(e);
-              } else {
-                messageError("You can only upload 10 files ...");
-              }
-            }}
-            multiple
-          />
-          {attachments.length > 0 && (
-            <div className="mt-2 text-sm space-y-2">
-              {attachments.map((file, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <p>{file.name}</p>
-                  <Trash2
-                    className="w-5 h-5 cursor-pointer"
-                    onClick={() => {
-                      setAttachments(attachments.filter((_, i) => i !== index));
-                    }}
-                  />
+        {!assignment.isSubmitted && (
+          <>
+            <div className="p-2 space-y-3">
+              <Label>Attach Files</Label>
+              <Input
+                type="file"
+                onChange={(e) => {
+                  const newAttachments = Array.from(e.target.files!);
+                  if (newAttachments.length + attachments.length <= 10) {
+                    handleFileChange(e);
+                  } else {
+                    messageError("You can only upload 10 files ...");
+                  }
+                }}
+                multiple
+              />
+              {attachments.length > 0 && (
+                <div className="mt-2 text-sm space-y-2">
+                  {attachments.map((file, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between"
+                    >
+                      <p>{file.name}</p>
+                      <Trash2
+                        className="w-5 h-5 cursor-pointer"
+                        onClick={() => {
+                          setAttachments(
+                            attachments.filter((_, i) => i !== index)
+                          );
+                        }}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-        </div>
-        <Button>Hand In</Button>
+
+            <Button
+              onClick={handleAssSubmission}
+              disabled={attachments.length === 0 || loading}
+            >
+              {loading && <Icons.spinner className="w-5 h-5 animate-spin" />}
+              {loading ? "Submitting..." : "Submit"}
+            </Button>
+          </>
+        )}
+
+        {assignment.isSubmitted && (
+          <div className="p-2 space-y-3">
+            <h1 className="text-2xl font-bold">You are done</h1>
+            <Link href={`/dashboard/batches/${batchId}/assignments/${assignmentId}/submitted`}>
+              <Button>View Submission Details</Button>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

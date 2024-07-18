@@ -30,6 +30,43 @@ export const assignmentsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(assignmentThunks.getSubmittedAssignmentByBatchId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        assignmentThunks.getSubmittedAssignmentByBatchId.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.singleAssignment = action.payload;
+        }
+      )
+      .addCase(
+        assignmentThunks.getSubmittedAssignmentByBatchId.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
+        }
+      )
+      .addCase(assignmentThunks.handInAsignment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        assignmentThunks.handInAsignment.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+        }
+      )
+      .addCase(
+        assignmentThunks.handInAsignment.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
+        }
+      )
       .addCase(assignmentThunks.getAllAssignmentsByBatchId.pending, (state) => {
         state.loading = true;
         state.error = null;

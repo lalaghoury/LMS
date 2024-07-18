@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -23,13 +23,13 @@ import {
   CommandItem,
   CommandSeparator,
 } from "@/components/ui/command";
-import { students } from "@/constants/CreateBatch";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { assignmentThunks } from "@/lib/features/assignments/assignmentThunks";
 import { Icons } from "../ui/icons";
 import { useToast } from "@/components/ui/use-toast";
+import { studentsThunks } from "@/lib/features/students/studentsThunks";
 
 interface AssignmentCreationDialogProps {
   assDialogOpen: boolean;
@@ -169,6 +169,7 @@ const AssignmentCreationDialog: React.FC<AssignmentCreationDialogProps> = ({
         <SelectStudents
           selectedStudents={selectedStudents}
           setSelectedStudents={setSelectedStudents}
+          batchId={batchId}
         />
 
         <DialogFooter>
@@ -190,10 +191,21 @@ export default AssignmentCreationDialog;
 const SelectStudents = ({
   selectedStudents,
   setSelectedStudents,
+  batchId,
 }: {
   selectedStudents: string[];
   setSelectedStudents: React.Dispatch<React.SetStateAction<string[]>>;
+  batchId: string;
 }) => {
+  const dispatch = useAppDispatch();
+  const { loading, students } = useAppSelector((state) => state.students);
+
+  useEffect(() => {
+    dispatch(studentsThunks.getAllStudentsOfABatch({ batchId }));
+  }, [dispatch, batchId]);
+
+  if (loading) return <Icons.spinner className="w-4 h-4 mr-2 animate-spin" />;
+
   const handleSelectStudent = (studentId: string) => {
     if (!selectedStudents.includes(studentId)) {
       setSelectedStudents((prev) => [...prev, studentId]);
@@ -220,14 +232,14 @@ const SelectStudents = ({
                   <>
                     {students.map((student) => (
                       <CommandItem
-                        key={student.id}
-                        // value={student.id}
-                        onSelect={() => handleSelectStudent(student.id)}
+                        key={student._id}
+                        // value={student._id}
+                        onSelect={() => handleSelectStudent(student._id)}
                       >
                         <div
                           className={cn(
                             "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                            selectedStudents.includes(student.id)
+                            selectedStudents.includes(student._id)
                               ? "bg-primary text-primary-foreground"
                               : "opacity-50 [&_svg]:invisible"
                           )}

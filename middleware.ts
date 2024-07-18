@@ -5,9 +5,7 @@ import axios from "axios";
 export async function middleware(req: NextRequest, res: NextResponse) {
   try {
     const token = req.cookies.get("auth");
-
     axios.defaults.headers.common["Authorization"] = `Bearer ${token?.value}`;
-
     axios.defaults.withCredentials = true;
 
     const { data } = await axios.get(
