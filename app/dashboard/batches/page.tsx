@@ -3,7 +3,6 @@
 import { batchThunks } from "@/lib/features/batches/batchThunks";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import React, { useEffect } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import BatchesCard from "@/components/batches/BatchesCard";
 import NoBatchesFoundCard from "@/components/batches/NoBatchesFoundCard";
 
@@ -14,8 +13,6 @@ const Batches = () => {
   useEffect(() => {
     dispatch(batchThunks.getAllBatchesAsTeacherOrOwner());
   }, [dispatch]);
-
-  if (loading) return <SkeletonCard />;
 
   if (batches.length === 0) return <NoBatchesFoundCard />;
   return (
@@ -28,15 +25,3 @@ const Batches = () => {
 };
 
 export default Batches;
-
-export function SkeletonCard() {
-  return (
-    <div className="flex flex-col space-y-3">
-      <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-[250px]" />
-        <Skeleton className="h-4 w-[200px]" />
-      </div>
-    </div>
-  );
-}

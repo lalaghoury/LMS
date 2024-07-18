@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { messageSuccess } from "@/components/message";
 import Cookies from "js-cookie";
 import { studentsThunks } from "@/lib/features/students/studentsThunks";
+import { Icons } from "@/components/ui/icons";
 
 interface InvitationAcceptorProps {
   params: {
@@ -35,10 +36,6 @@ const InvitationAcceptor = ({ params }: InvitationAcceptorProps) => {
     dispatch(studentsThunks.verifyInviteCode({ inviteCode, batchId, router }));
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="w-full h-screen flex flex-col px-4 text-center items-center justify-center bg-background">
       <h1 className="text-3xl font-bold">
@@ -49,7 +46,10 @@ const InvitationAcceptor = ({ params }: InvitationAcceptorProps) => {
       <br />
       <br />
 
-      <Button onClick={verifyInviteCode}>Accept Invite</Button>
+      <Button onClick={verifyInviteCode} disabled={loading}>
+        {loading && <Icons.spinner className="w-4 h-4 mr-2 animate-spin" />}{" "}
+        {loading ? "Accepting..." : "Accept Invite"}
+      </Button>
     </div>
   );
 };
