@@ -39,7 +39,7 @@ const OAuthSuccessPage = () => {
       }
     };
     getUser();
-  }, [dispatch]);
+  }, [dispatch, router]);
 
   return (
     <div className="h-[350px] w-screen flex items-center justify-center">
