@@ -23,7 +23,7 @@ const EnrolledBatches = () => {
   return (
     <div className="w-full h-full flex flex-wrap gap-4 py-2 ">
       {batches.map((batch: any) => (
-        <BatchesCard batch={batch} route={`enrolled`} />
+        <BatchesCard key={batch._id} batch={batch} route={`enrolled`} />
       ))}
     </div>
   );

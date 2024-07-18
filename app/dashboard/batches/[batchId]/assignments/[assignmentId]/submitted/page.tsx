@@ -13,7 +13,7 @@ interface AssifnmentSubmissionDetailsPageProps {
   };
 }
 
-const AssifnmentSubmissionDetailsPage = ({
+const AssinmentSubmissionDetailsPage = ({
   params,
 }: AssifnmentSubmissionDetailsPageProps) => {
   const { batchId, assignmentId } = params;
@@ -30,7 +30,7 @@ const AssifnmentSubmissionDetailsPage = ({
         assignmentId,
       })
     );
-  }, [batchId, dispatch]);
+  }, [batchId, dispatch, assignmentId]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -113,4 +113,4 @@ const AssifnmentSubmissionDetailsPage = ({
   );
 };
 
-export default AssifnmentSubmissionDetailsPage;
+export default AssinmentSubmissionDetailsPage;

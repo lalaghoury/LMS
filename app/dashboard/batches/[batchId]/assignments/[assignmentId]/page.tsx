@@ -32,7 +32,7 @@ const AssignmentDetailsPage = ({ params }: AssignmentDetailsPageProps) => {
 
   useEffect(() => {
     dispatch(assignmentThunks.getAnAssignmentById({ assignmentId }));
-  }, [assignmentId]);
+  }, [assignmentId, dispatch]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
