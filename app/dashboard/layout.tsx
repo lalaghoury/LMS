@@ -16,8 +16,6 @@ export default function DashboardLayout({
       <Navbar setIsCollapsed={setIsCollapsed} isCollapsed={isCollapsed} />
       <Separator className="mt-4" />
 
-      {/* <BreadcrumbWithCustomSeparator /> */}
-      <Separator className="mt-4" />
 
       <div className="w-full flex mt-5">
         <SidebarNav isCollapsed={isCollapsed} />
