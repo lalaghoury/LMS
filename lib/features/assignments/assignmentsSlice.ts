@@ -96,7 +96,7 @@ export const assignmentsSlice = createSlice({
       .addCase(
         assignmentThunks.getAnAssignmentById.fulfilled,
         (state, action: PayloadAction<any>) => {
-          state.loading = false;
+          state.loading = false; 
           state.singleAssignment = action.payload;
         }
       )
