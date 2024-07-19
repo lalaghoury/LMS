@@ -87,37 +87,34 @@ export default function SignInPage() {
               </div>
             </div>
 
-            <>
-              {[
-                { name: "email", label: "Email", type: "email" },
-                { name: "password", label: "Password", type: "password" },
-              ].map(
-                ({
-                  name,
-                  label,
-                  type,
-                }: {
-                  name: string;
-                  label: string;
-                  type: string;
-                }) => (
-                  <div className="grid gap-2" key={name}>
-                    <Label htmlFor={name}>{label}</Label>
-                    <Input
-                      id={name}
-                      type={type}
-                      placeholder={`Enter your ${label.toLowerCase()}`}
-                      {...register(name)}
-                    />
-                    {errors[name] && (
-                      <p className="bg-yellow-100 text-red-500 italic px-2 py-1 rounded-md self-start">
-                        {errors[name]?.message}
-                      </p>
-                    )}
-                  </div>
-                )
+            <div className="grid gap-2" key={"name"}>
+              <Label htmlFor={"email"}>{"Email"}</Label>
+              <Input
+                id={"email"}
+                type={"email"}
+                placeholder={`Enter your email`}
+                {...register("email")}
+              />
+              {errors.email && (
+                <p className="text-sm text-red-500 px-2 py-1 rounded-md self-start">
+                  {errors.email?.message}
+                </p>
               )}
-            </>
+            </div>
+            <div className="grid gap-2" key={"name"}>
+              <Label htmlFor={"password"}>{"Password"}</Label>
+              <Input
+                id={"password"}
+                type={"password"}
+                placeholder={`Enter your password`}
+                {...register("password")}
+              />
+              {errors.password && (
+                <p className="text-sm text-red-500 px-2 py-1 rounded-md self-start">
+                  {errors.password?.message}
+                </p>
+              )}
+            </div>
 
             <CardDescription>
               New to LMS?{" "}

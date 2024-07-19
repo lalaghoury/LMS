@@ -12,12 +12,7 @@ export const assignmentThunks = {
         router,
         batchId,
       }: {
-        formData: {
-          title: string;
-          students: [];
-          instructions: string;
-          files: File[];
-        };
+        formData: any;
         router: any;
         batchId: string;
       },
@@ -128,18 +123,18 @@ export const assignmentThunks = {
         formData,
         router,
         assignmentId,
+        batchId,
       }: {
-        formData: {
-          files: File[];
-        };
+        formData: any;
         router: any;
         assignmentId: string;
+        batchId: string;
       },
       { rejectWithValue }
     ) => {
       try {
         const { data } = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/batches/assignments/hand-in/${assignmentId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/assignments/hand-in/${batchId}/${assignmentId}`,
           formData
         );
 

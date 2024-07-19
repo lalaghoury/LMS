@@ -8,7 +8,7 @@ import NoBatchesFoundCard from "@/components/batches/NoBatchesFoundCard";
 
 const EnrolledBatches = () => {
   const dispatch = useAppDispatch();
-  const { loading, batches } = useAppSelector((state) => state.batches);
+  const { batches } = useAppSelector((state) => state.batches);
 
   useEffect(() => {
     dispatch(batchThunks.getAllBatchesAsStudent());

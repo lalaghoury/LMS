@@ -33,7 +33,7 @@ const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
 
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { loading, code } = useAppSelector((state) => state.students);
+  const { loading, code }: any = useAppSelector((state) => state.students);
 
   useEffect(() => {
     dispatch(studentsThunks.generateInviteCode({ batchId }));
@@ -110,22 +110,6 @@ const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
             />
             <br />
             <Separator className="my-2" />
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                e.currentTarget.blur();
-                const input = document.querySelector(
-                  "input[placeholder='Input your email']"
-                );
-                if (input) {
-                  input.focus();
-                  input.setSelectionRange(0, 0);
-                }
-              }}
-              className="w-full"
-            >
-              Add Recipients
-            </Button>
           </form>
         </div>
 

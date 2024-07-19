@@ -198,7 +198,8 @@ const SelectStudents = ({
   batchId: string;
 }) => {
   const dispatch = useAppDispatch();
-  const { loading, students } = useAppSelector((state) => state.students);
+  const { loading, students }: { loading: boolean; students: any[] } =
+    useAppSelector((state) => state.students);
 
   useEffect(() => {
     dispatch(studentsThunks.getAllStudentsOfABatch({ batchId }));
@@ -233,7 +234,6 @@ const SelectStudents = ({
                     {students.map((student) => (
                       <CommandItem
                         key={student._id}
-                        // value={student._id}
                         onSelect={() => handleSelectStudent(student._id)}
                       >
                         <div

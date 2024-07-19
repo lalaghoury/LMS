@@ -33,6 +33,7 @@ const BatchJoiningDialog = ({
   const router = useRouter();
 
   const handleJoinIntoBatch = async () => {
+    if (batchJoiningCode.length === 0) return setJoinBatch(!joinBatch);
     dispatch(
       batchThunks.joinIntoBatchByBatchCode({ code: batchJoiningCode, router })
     );
@@ -83,10 +84,7 @@ const BatchJoiningDialog = ({
         <DialogFooter>
           <Button onClick={() => setJoinBatch(!joinBatch)}>Cancel</Button>
 
-          <Button
-            disabled={loading}
-            onClick={handleJoinIntoBatch}
-          >
+          <Button disabled={loading} onClick={handleJoinIntoBatch}>
             {loading && <Icons.spinner className="w-4 h-4 mr-2 animate-spin" />}{" "}
             {loading ? "Joining..." : "Join"}
           </Button>

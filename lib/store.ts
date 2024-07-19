@@ -3,6 +3,8 @@ import authReducer from "./features/auth/authSlice";
 import batchReducer from "./features/batches/batchSlice";
 import studentsReducer from "./features/students/studentsSlice";
 import assignmentsReducer from "./features/assignments/assignmentsSlice";
+import submissionsReducer from "./features/submissions/submissionSlice";
+import chartReducer from "@/lib/features/charts/chartSlice"
 
 export const makeStore = () => {
   return configureStore({
@@ -11,6 +13,8 @@ export const makeStore = () => {
       batches: batchReducer,
       students: studentsReducer,
       assignments: assignmentsReducer,
+      submissions: submissionsReducer,
+      chart: chartReducer,
     },
   });
 };

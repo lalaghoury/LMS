@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { createBatchConstants } from "@/constants/CreateBatch";
 import { batchThunks } from "@/lib/features/batches/batchThunks";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { Icons } from "../ui/icons";
@@ -37,11 +36,6 @@ export const CreateBatchDialog = ({
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.batches.loading);
   const router = useRouter();
-
-  const handleCreateBatch = (e: React.FormEvent<HTMLFormElement>) => {
-    dispatch(batchThunks.createBatch(values));
-    setCreateBatchDialogVisibility(!createBatchDialogVisibility);
-  };
 
   const {
     register,
@@ -76,26 +70,76 @@ export const CreateBatchDialog = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-2">
-          {createBatchConstants.map(({ label, name }, index) => (
-            <div key={index} className="relative">
-              <Input
-                type={"text"}
-                id={`floating-${index}`}
-                className={`${createBatchStyles.input}`}
-                placeholder=" "
-                {...register(name)}
-              />
-              <Label htmlFor={name} className={`${createBatchStyles.label}`}>
-                {label}
-              </Label>
+          <div className="relative">
+            <Input
+              type={"text"}
+              className={`${createBatchStyles.input}`}
+              placeholder=" "
+              {...register("name")}
+            />
+            <Label htmlFor={"name"} className={`${createBatchStyles.label}`}>
+              Class name (required)
+            </Label>
 
-              {errors[name] && (
-                <p className="bg-yellow-100 text-red-500 italic px-2 py-1 rounded-md self-start">
-                  {errors[name]?.message}
-                </p>
-              )}
-            </div>
-          ))}
+            {errors.name && (
+              <p className="text-sm text-red-500 px-2 py-1 rounded-md self-start">
+                {errors.name?.message}
+              </p>
+            )}
+          </div>
+
+          <div className="relative">
+            <Input
+              type={"text"}
+              className={`${createBatchStyles.input}`}
+              placeholder=" "
+              {...register("section")}
+            />
+            <Label htmlFor={"section"} className={`${createBatchStyles.label}`}>
+              Section
+            </Label>
+
+            {errors.section && (
+              <p className="text-sm text-red-500 px-2 py-1 rounded-md self-start">
+                {errors.section?.message}
+              </p>
+            )}
+          </div>
+
+          <div className="relative">
+            <Input
+              type={"text"}
+              className={`${createBatchStyles.input}`}
+              placeholder=" "
+              {...register("subject")}
+            />
+            <Label htmlFor={"subject"} className={`${createBatchStyles.label}`}>
+              Subject
+            </Label>
+
+            {errors.subject && (
+              <p className="text-sm text-red-500 px-2 py-1 rounded-md self-start">
+                {errors.subject?.message}
+              </p>
+            )}
+          </div>
+          <div className="relative">
+            <Input
+              type={"text"}
+              className={`${createBatchStyles.input}`}
+              placeholder=" "
+              {...register("room")}
+            />
+            <Label htmlFor={"room"} className={`${createBatchStyles.label}`}>
+              Room
+            </Label>
+
+            {errors.room && (
+              <p className="text-sm text-red-500 px-2 py-1 rounded-md self-start">
+                {errors.room?.message}
+              </p>
+            )}
+          </div>
 
           <DialogFooter>
             <Button onClick={() => setCreateBatchDialogVisibility(false)}>

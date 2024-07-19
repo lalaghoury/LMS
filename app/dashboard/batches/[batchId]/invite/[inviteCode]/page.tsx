@@ -3,11 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { batchThunks } from "@/lib/features/batches/batchThunks";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import axios from "axios";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { messageSuccess } from "@/components/message";
-import Cookies from "js-cookie";
 import { studentsThunks } from "@/lib/features/students/studentsThunks";
 import { Icons } from "@/components/ui/icons";
 
@@ -23,10 +20,10 @@ const InvitationAcceptor = ({ params }: InvitationAcceptorProps) => {
   const router = useRouter();
 
   const dispatch = useAppDispatch();
-  const { loading, singleBatch: batch } = useAppSelector(
+  const { loading, singleBatch: batch }: any = useAppSelector(
     (state) => state.batches
   );
-  const { name } = useAppSelector((state) => state.auth.user);
+  const { name }: any = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(batchThunks.getABatchById(batchId));

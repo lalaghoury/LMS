@@ -69,7 +69,7 @@ export const authThunks = {
           return data.user;
         }
       } catch (error: any) {
-        console.log("🚀 ~ error:", error)
+        console.log("🚀 ~ error:", error);
         console.error("Error signing in:", error.response.data.message);
         return rejectWithValue(
           error.response.data.message ?? "Error signing in, please try again!"
@@ -91,7 +91,54 @@ export const authThunks = {
         }
       } catch (error: any) {
         console.error("Error logging out:", error.response.data.message);
-        return rejectWithValue(error.response.data.message ?? "Error logging out, please try again!");
+        return rejectWithValue(
+          error.response.data.message ?? "Error logging out, please try again!"
+        );
+      }
+    }
+  ),
+
+  updateUser: createAsyncThunk(
+    "user/updateUser",
+    async (
+      { values, url }: { values: any; url: string },
+      { dispatch, rejectWithValue }
+    ) => {
+      try {
+        const { data } = await axios.put(
+          `${process.env.NEXT_PUBLIC_API_URL}${url}`,
+          values
+        );
+        if (data.success) {
+          dispatch(signinAction({ user: data.user }));
+          messageSuccess(data.message);
+          return data.user;
+        }
+      } catch (error: any) {
+        console.error("Error Updating user:", error.response.data);
+        return rejectWithValue(
+          error.response.data.message ?? "Error updating user"
+        );
+      }
+    }
+  ),
+
+  deleteUser: createAsyncThunk(
+    "user/deleteUser",
+    async ({ url }: any, { rejectWithValue }) => {
+      try {
+        const { data } = await axios.delete(
+          `${process.env.NEXT_PUBLIC_API_URL}${url}`
+        );
+        if (data.success) {
+          messageSuccess(data.message);
+          return data.user._id;
+        }
+      } catch (error: any) {
+        console.error("Error deleting user:", error.response.data);
+        return rejectWithValue(
+          error.response.data.message ?? "Error deleting user"
+        );
       }
     }
   ),

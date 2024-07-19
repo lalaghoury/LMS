@@ -26,18 +26,14 @@ const BatchDetailsPage = ({ params }: BatchDetailsPageProps) => {
   const [addNewStudentsDialog, setAddNewStudentsDialog] = useState(false);
 
   const dispatch = useAppDispatch();
-  const { loading, singleBatch: batch } = useAppSelector(
+  const { loading, singleBatch: batch }: any = useAppSelector(
     (state) => state.batches
   );
-  const { _id } = useAppSelector((state) => state.auth.user);
+  const { _id }: any = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(batchThunks.getABatchByIdAsTeacherOrOwner(batchId));
   }, [dispatch, batchId]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   if (!batch) {
     return <div>Batch not found</div>;

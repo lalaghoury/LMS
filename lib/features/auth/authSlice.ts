@@ -64,6 +64,12 @@ export const authSlice = createSlice({
     signout: (state) => {
       localStorage.removeItem("auth");
       Object.assign(state, initialState);
+      if (Cookies.get("auth")) {
+        Cookies.remove("auth");
+      }
+      if (Cookies.get("redirectUrl")) {
+        Cookies.remove("redirectUrl");
+      }
     },
     initializeAuthState: (state) => {
       const auth = localStorage.getItem("auth");
@@ -118,7 +124,7 @@ export const authSlice = createSlice({
         (state, action: PayloadAction<any>) => {
           state.loading = false;
           state.error = action.payload;
-          messageError(action.payload)
+          messageError(action.payload);
         }
       )
 
@@ -137,6 +143,43 @@ export const authSlice = createSlice({
         (state, action: PayloadAction<any>) => {
           state.loading = false;
           state.error = action.payload;
+        }
+      )
+
+      .addCase(authThunks.updateUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        authThunks.updateUser.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.user = action.payload;
+        }
+      )
+      .addCase(
+        authThunks.updateUser.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
+        }
+      )
+
+      .addCase(authThunks.deleteUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(authThunks.deleteUser.fulfilled, (state) => {
+        state.loading = false;
+        authSlice.actions.signout();
+      })
+      .addCase(
+        authThunks.deleteUser.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
         }
       );
   },

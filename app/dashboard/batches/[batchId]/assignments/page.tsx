@@ -17,15 +17,12 @@ const AllAssignmentsPage = ({ params }: AllAssignmentsPageProps) => {
   const { batchId } = params;
 
   const dispatch = useAppDispatch();
-  const { loading, assignments } = useAppSelector((state) => state.assignments);
+  const { assignments }: any = useAppSelector((state) => state.assignments);
+  const { user }: any = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(assignmentThunks.getAllAssignmentsByBatchId({ batchId }));
   }, [batchId, dispatch]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   if (assignments.length === 0) {
     return <div>Assignments not found</div>;
@@ -33,7 +30,7 @@ const AllAssignmentsPage = ({ params }: AllAssignmentsPageProps) => {
 
   return (
     <div className="flex flex-col w-full h-screen px-2">
-      {assignments.map((assignment) => (
+      {assignments.map((assignment: any) => (
         <div key={assignment._id} className="mb-4">
           <div className="flex items-center justify-between py-2 border-b border-gray-300">
             <h1 className="text-2xl font-bold">{assignment.title}</h1>
@@ -67,11 +64,20 @@ const AllAssignmentsPage = ({ params }: AllAssignmentsPageProps) => {
             </div>
             <div className="flex gap-4 items-center justify-between">
               <p className="whitespace-pre-wrap">{assignment.instructions}</p>
-              <Link
-                href={`/dashboard/batches/${batchId}/assignments/${assignment._id}`}
-              >
-                <Button>View Details</Button>
-              </Link>
+              <div className="flex gap-2 items-center">
+                <Link
+                  href={`/dashboard/batches/${batchId}/assignments/${assignment._id}`}
+                >
+                  <Button>View Details</Button>
+                </Link>
+                {assignment.teacherId._id === user._id && (
+                  <Link
+                    href={`/dashboard/batches/${batchId}/assignments/${assignment._id}/submissions`}
+                  >
+                    <Button>View Submissions</Button>
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>

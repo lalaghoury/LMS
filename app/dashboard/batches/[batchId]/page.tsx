@@ -26,10 +26,10 @@ const BatchDetailsPage = ({ params }: BatchDetailsPageProps) => {
   const [addNewStudentsDialog, setAddNewStudentsDialog] = useState(false);
 
   const dispatch = useAppDispatch();
-  const { loading, singleBatch: batch } = useAppSelector(
+  const { loading, singleBatch: batch }: any = useAppSelector(
     (state) => state.batches
   );
-  const { _id } = useAppSelector((state) => state.auth.user);
+  const { _id }: any = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(batchThunks.getABatchById(batchId));
@@ -63,6 +63,7 @@ const BatchDetailsPage = ({ params }: BatchDetailsPageProps) => {
                 <AssignmentCreationDialog
                   assDialogOpen={assDialogOpen}
                   setAssDialogOpen={setAssDialogOpen}
+                  batchId={batchId}
                 />
               </div>
 
@@ -70,6 +71,7 @@ const BatchDetailsPage = ({ params }: BatchDetailsPageProps) => {
                 <AddNewStudentsDialog
                   addNewStudentsDialog={addNewStudentsDialog}
                   setAddNewStudentsDialog={setAddNewStudentsDialog}
+                  batchId={batchId}
                 />
               </div>
             </PopoverContent>
