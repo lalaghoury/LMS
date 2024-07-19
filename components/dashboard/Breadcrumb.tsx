@@ -12,7 +12,7 @@ import {
 import { useAppSelector } from "@/lib/hooks";
 
 export function BreadcrumbWithCustomSeparator() {
-  const { singleBatch: batch } = useAppSelector((state) => state.batches);
+  const { singleBatch: batch }: any = useAppSelector((state) => state.batches);
 
   return (
     <Breadcrumb className="mt-4">

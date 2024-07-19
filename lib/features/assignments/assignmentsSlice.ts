@@ -5,7 +5,7 @@ import { messageError } from "@/components/message";
 
 // Define a type for the slice state
 interface assignmentsSlice {
-  assignments: [object] | [];
+  assignments: Array<any> | [];
   loading: boolean;
   error: string | null;
   singleAssignment?: object;
@@ -30,10 +30,13 @@ export const assignmentsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(assignmentThunks.getSubmittedAssignmentByBatchId.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
+      .addCase(
+        assignmentThunks.getSubmittedAssignmentByBatchId.pending,
+        (state) => {
+          state.loading = true;
+          state.error = null;
+        }
+      )
       .addCase(
         assignmentThunks.getSubmittedAssignmentByBatchId.fulfilled,
         (state, action: PayloadAction<any>) => {
@@ -113,7 +116,7 @@ export const assignmentsSlice = createSlice({
         assignmentThunks.createAssignment.fulfilled,
         (state, action: PayloadAction<any>) => {
           state.loading = false;
-          state.assignments.push(action.payload);
+          state.assignments  = [...state.assignments, action.payload];
         }
       )
       .addCase(

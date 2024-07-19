@@ -5,10 +5,10 @@ import { messageError } from "@/components/message";
 
 // Define a type for the slice state
 interface studentsSlice {
-  students: [object] | [];
+  students: Array<any> | [];
   loading: boolean;
   error: string | null;
-  singleStudent?: object;
+  singleStudent?: object | null;
   code?: string;
 }
 

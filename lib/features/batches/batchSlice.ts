@@ -5,32 +5,10 @@ import { messageError } from "@/components/message";
 
 // Define a type for the slice state
 interface batchSlice {
-  batches:
-    | [
-        {
-          name: string;
-          section: string;
-          subject: string;
-          room: string;
-          owner: {
-            _id: string;
-            name: string;
-          };
-        }
-      ]
-    | [];
+  batches: Array<any> | [];
   loading: boolean;
   error: string | null;
-  singleBatch?: {
-    name: string;
-    section: string;
-    subject: string;
-    room: string;
-    owner: {
-      _id: string;
-      name: string;
-    };
-  };
+  singleBatch?: {} | null;
 }
 
 // Define the initial state using that type
@@ -38,16 +16,7 @@ const initialState: batchSlice = {
   batches: [],
   loading: false,
   error: null,
-  singleBatch: {
-    name: "",
-    section: "",
-    subject: "",
-    room: "",
-    owner: {
-      _id: "",
-      name: "",
-    },
-  },
+  singleBatch: {},
 };
 
 export const batchSlice = createSlice({
@@ -89,7 +58,7 @@ export const batchSlice = createSlice({
         batchThunks.createBatch.fulfilled,
         (state, action: PayloadAction<any>) => {
           state.loading = false;
-          state.batches.push(action.payload);
+          state.batches = [...state.batches, action.payload];
         }
       )
       .addCase(
@@ -117,7 +86,7 @@ export const batchSlice = createSlice({
         batchThunks.joinIntoBatchByBatchCode.fulfilled,
         (state, action: PayloadAction<object>) => {
           state.loading = false;
-          state.batches.push(action.payload);
+          state.batches = [...state.batches, action.payload];
         }
       )
       .addCase(

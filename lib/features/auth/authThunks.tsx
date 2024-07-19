@@ -27,8 +27,7 @@ export const authThunks = {
         const { message, success } = data;
         if (success) {
           !redirectUrl && messageSuccess(message);
-          redirectUrl &&
-            dispatch(authThunks.signin({ values, router, redirectUrl }));
+          redirectUrl && dispatch(authThunks.signin({ values, router }));
           !redirectUrl && router.push("/auth/sign-in");
           return true;
         }
