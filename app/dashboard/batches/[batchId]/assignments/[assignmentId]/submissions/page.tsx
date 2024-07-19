@@ -38,7 +38,7 @@ const AllAssinmentSubmissionDetailsPage = ({
   return (
     <>
       {submissions.map((sub) => (
-        <div className="flex flex-col w-full space-y-4 px-4">
+        <div className="flex flex-col w-full space-y-4 px-4" key={sub._id}>
           <h1 className="text-2xl font-bold">{sub.assignmentId.title}</h1>
 
           <div className="flex gap-4 items-center justify-between">
