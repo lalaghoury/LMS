@@ -5,6 +5,7 @@ import { submissionThunks } from "@/lib/features/submissions/submissionThunks";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import Image from "next/image";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 interface AssifnmentSubmissionDetailsPageProps {
   params: {
@@ -18,6 +19,7 @@ const AssinmentSubmissionDetailsPage = ({
   params,
 }: AssifnmentSubmissionDetailsPageProps) => {
   const { batchId, assignmentId, submissionId } = params;
+  const router = useRouter();
 
   const dispatch = useAppDispatch();
   const { singleSubmission }: any = useAppSelector(
@@ -30,6 +32,8 @@ const AssinmentSubmissionDetailsPage = ({
         batchId,
         assignmentId,
         submissionId,
+        router,
+        route: "enrolled",
       })
     );
   }, [batchId, dispatch, assignmentId, submissionId]);
