@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 interface AllAssinmentSubmissionDetailsPageProps {
   params: {
@@ -19,6 +20,8 @@ const AllAssinmentSubmissionDetailsPage = ({
 }: AllAssinmentSubmissionDetailsPageProps) => {
   const { batchId, assignmentId } = params;
 
+  const router = useRouter();
+
   const dispatch = useAppDispatch();
   const { submissions } = useAppSelector((state) => state.submissions);
 
@@ -27,6 +30,7 @@ const AllAssinmentSubmissionDetailsPage = ({
       submissionThunks.getAllSubmissionsOfAnAssignment({
         batchId,
         assignmentId,
+        router,
       })
     );
   }, [batchId, dispatch, assignmentId]);
