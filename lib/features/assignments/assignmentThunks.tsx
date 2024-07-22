@@ -148,7 +148,7 @@ export const assignmentThunks = {
         if (data.success) {
           messageSuccess(data.message);
           router.push(
-            `/batches/${data.assignment.batchId}/assignments/${assignmentId}/submitted`
+            `/batches/enrolled/${data.assignment.batchId}/assignments/${assignmentId}/submitted`
           );
           return data.assignment;
         }

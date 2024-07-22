@@ -122,7 +122,7 @@ const AssignmentDetailsPage = ({ params }: AssignmentDetailsPageProps) => {
           <div className="flex flex-col gap-y-3">
             <h1 className="text-2xl font-bold">You are done</h1>
             <Link
-              href={`/batches/${batchId}/assignments/${assignmentId}/submitted`}
+              href={`/batches/enrolled/${batchId}/assignments/${assignmentId}/submitted`}
             >
               <Button>View Submission Details</Button>
             </Link>
