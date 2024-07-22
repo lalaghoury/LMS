@@ -30,7 +30,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function Dashboard() {
+export default function HomePage() {
   const dispatch = useAppDispatch();
   const { assignments, batches, submissions } = useAppSelector(
     (state) => state.chart
