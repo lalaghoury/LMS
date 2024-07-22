@@ -11,6 +11,7 @@ export async function middleware(req: NextRequest, res: NextResponse) {
   }
 
   axios.defaults.withCredentials = true;
+
   const { pathname } = req.nextUrl;
 
   // Determine API path based on pathname
@@ -31,28 +32,30 @@ export async function middleware(req: NextRequest, res: NextResponse) {
     );
 
     if (data.success) {
-      if (req.nextUrl.pathname.startsWith("/auth")) {
+      // User is authorized
+      if (pathname.startsWith("/auth")) {
         return NextResponse.redirect(new URL("/", req.url));
       }
       return NextResponse.next();
     }
   } catch (error: any) {
+    // Handle authorization error
     if (
-      error.response.data.message ===
-      "You are not authorized to perform this action"
+      error.response &&
+      error.response.data &&
+      error.response.data.message === "You are not authorized to perform this action"
     ) {
-      return NextResponse.redirect(
-        new URL(
-          `/batches/${apiPath === "/teaching" ? "enrolled" : "teaching"}`,
-          req.url
-        )
-      );
-    }
-    if (!req.nextUrl.pathname.startsWith("/auth")) {
-      return NextResponse.redirect(new URL("/auth/sign-in", req.url));
+      // Redirect to appropriate batch path
+      return NextResponse.redirect(new URL(`/batches${apiPath}`, req.url));
     }
   }
 
+  // Default to redirect to sign-in if not authorized and not in /auth path
+  if (!pathname.startsWith("/auth")) {
+    return NextResponse.redirect(new URL("/auth/sign-in", req.url));
+  }
+
+  // Continue to next if none of the conditions were met
   return NextResponse.next();
 }
 
