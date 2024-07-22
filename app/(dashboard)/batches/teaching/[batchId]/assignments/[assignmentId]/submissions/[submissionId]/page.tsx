@@ -44,7 +44,7 @@ const AssinmentSubmissionDetailsPage = ({
         route: "teaching",
       })
     );
-  }, [batchId, dispatch, assignmentId, submissionId]);
+  }, [batchId, dispatch, assignmentId, submissionId, router]);
 
   if (!singleSubmission) {
     return <div>Submission not found</div>;
@@ -152,7 +152,9 @@ const AssinmentSubmissionDetailsPage = ({
                 }
               >
                 {["A", "B", "C", "D", "E", "F", "Not Graded"].map((g) => (
-                  <DropdownMenuRadioItem value={g}>{g}</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem key={g} value={g}>
+                    {g}
+                  </DropdownMenuRadioItem>
                 ))}
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>

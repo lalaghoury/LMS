@@ -29,7 +29,7 @@ const AllAssinmentSubmissionDetailsPage = ({
         router,
       })
     );
-  }, [batchId, dispatch, assignmentId]);
+  }, [batchId, dispatch, assignmentId, router]);
 
   if (submissions.length === 0) {
     return <div>No submissions found</div>;
