@@ -6,8 +6,6 @@ import StoreProvider from "./StoreProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { Navbar, SidebarNav } from "@/components/dashboard";
 import { Separator } from "@/components/ui/separator";
-import axios from "axios";
-axios.defaults.withCredentials = true;
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 
