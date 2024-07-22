@@ -28,7 +28,7 @@ const OAuthSuccessPage = () => {
         if (data.success) {
           dispatch(signin({ user: data.user }));
           const redirectUrl = Cookies.get("redirectUrl");
-          router.push(redirectUrl ? redirectUrl : "/dashboard");
+          router.push(redirectUrl ? redirectUrl : "/");
           redirectUrl && Cookies.remove("redirectUrl");
         }
       } catch (error: any) {

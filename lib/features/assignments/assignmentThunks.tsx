@@ -20,14 +20,14 @@ export const assignmentThunks = {
     ) => {
       try {
         const { data } = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/batches/assignments/${batchId}/new`,
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/assignments/teaching/${batchId}/new`,
           formData
         );
         const { success, assignment, message } = data;
         if (success) {
           messageSuccess(message);
           router.push(
-            `/dashboard/batches/${batchId}/assignments/${assignment._id}`
+            `/batches/teaching/${batchId}/assignments/${assignment._id}`
           );
           return assignment;
         }
@@ -71,10 +71,17 @@ export const assignmentThunks = {
 
   getAnAssignmentById: createAsyncThunk(
     "assignments/getAnAssignmentById",
-    async ({ assignmentId }: { assignmentId: string }, { rejectWithValue }) => {
+    async (
+      {
+        assignmentId,
+        batchId,
+        route,
+      }: { assignmentId: string; batchId: string; route: string },
+      { rejectWithValue }
+    ) => {
       try {
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/batches/assignments/get-single/${assignmentId}`
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/assignments/${route}/get-single/${batchId}/${assignmentId}`
         );
         const { success, assignment, isSubmitted, message } = data;
         if (success) {
@@ -141,7 +148,7 @@ export const assignmentThunks = {
         if (data.success) {
           messageSuccess(data.message);
           router.push(
-            `/dashboard/batches/${data.assignment.batchId}/assignments/${assignmentId}/submitted`
+            `/batches/${data.assignment.batchId}/assignments/${assignmentId}/submitted`
           );
           return data.assignment;
         }

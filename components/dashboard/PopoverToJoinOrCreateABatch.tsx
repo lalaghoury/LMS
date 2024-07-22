@@ -1,8 +1,9 @@
+"use client";
+
 import { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -71,7 +72,7 @@ export function PopoverToJoinOrCreateABatch() {
                     accounts.
                   </p>
                   <div
-                    className="flex p-5 gap-3 bg-gray-300 rounded-md "
+                    className="flex p-5 gap-3 bg-secondary rounded-md "
                     onClick={() => setCheckedBatch(!checkedBatch)}
                   >
                     <input

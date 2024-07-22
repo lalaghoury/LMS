@@ -7,7 +7,7 @@ interface submissionSlice {
   loading: boolean;
   submissions: Array<any> | [];
   error: string | null;
-  singleSubmission?: object | null;
+  singleSubmission?: any | null;
 }
 
 const initialState: submissionSlice = {
@@ -23,6 +23,28 @@ export const submissionSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(submissionThunks.updateGrade.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        submissionThunks.updateGrade.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.singleSubmission = {
+            ...state.singleSubmission,
+            grade: action.payload.grade,
+          };
+        }
+      )
+      .addCase(
+        submissionThunks.updateGrade.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
+        }
+      )
       .addCase(
         submissionThunks.getAllSubmissionsOfAnAssignment.pending,
         (state) => {

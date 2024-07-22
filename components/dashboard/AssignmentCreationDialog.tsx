@@ -30,6 +30,8 @@ import { assignmentThunks } from "@/lib/features/assignments/assignmentThunks";
 import { Icons } from "../ui/icons";
 import { useToast } from "@/components/ui/use-toast";
 import { studentsThunks } from "@/lib/features/students/studentsThunks";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 interface AssignmentCreationDialogProps {
   assDialogOpen: boolean;
@@ -115,14 +117,50 @@ const AssignmentCreationDialog: React.FC<AssignmentCreationDialogProps> = ({
                 type="text"
                 name="title"
               />
-              <Input
+
+              {/* <Input
                 placeholder="Instructions"
                 value={instructions}
                 onChange={(e) => setInstructions(e.target.value)}
                 type="text"
-                className="mt-4"
                 name="instructions"
+                className="mt-4"
+              /> */}
+
+              <ReactQuill
+                theme="snow"
+                value={instructions}
+                onChange={setInstructions}
+                className="mt-4"
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ["bold", "italic", "underline", "strike", "blockquote"],
+                    [
+                      { list: "ordered" },
+                      { list: "bullet" },
+                      { indent: "-1" },
+                      { indent: "+1" },
+                    ],
+                    ["link", "image"],
+                    ["clean"],
+                  ],
+                }}
+                formats={[
+                  "header",
+                  "bold",
+                  "italic",
+                  "underline",
+                  "strike",
+                  "blockquote",
+                  "list",
+                  "bullet",
+                  "indent",
+                  "link",
+                  "image",
+                ]}
               />
+
               <div className="mt-4">
                 <Label>Attach Files</Label>
                 <Input

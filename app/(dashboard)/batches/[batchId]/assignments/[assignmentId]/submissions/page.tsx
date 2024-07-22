@@ -62,7 +62,7 @@ const AllAssinmentSubmissionDetailsPage = ({
 
             <div className="flex flex-col gap-4 py-2">
               <Link
-                href={`/dashboard/batches/${batchId}/assignments/${assignmentId}/submissions/${sub._id}`}
+                href={`/batches/${batchId}/assignments/${assignmentId}/submissions/${sub._id}`}
               >
                 <Button>View Submission Details</Button>
               </Link>

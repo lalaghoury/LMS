@@ -6,15 +6,17 @@ import { messageError } from "@/components/message";
 // Define a type for the slice state
 interface studentsSlice {
   students: Array<any> | [];
+  blockedStudents: Array<any> | [];
   loading: boolean;
   error: string | null;
-  singleStudent?: object | null;
+  singleStudent?: {} | null;
   code?: string;
 }
 
 // Define the initial state using that type
 const initialState: studentsSlice = {
   students: [],
+  blockedStudents: [],
   loading: false,
   error: null,
   singleStudent: {
@@ -31,6 +33,71 @@ export const studentsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(studentsThunks.unblockStudent.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        studentsThunks.unblockStudent.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.blockedStudents = state.blockedStudents.filter(
+            (student) => student._id !== action.payload.studentId
+          );
+          state.students = action.payload.students;
+        }
+      )
+      .addCase(
+        studentsThunks.unblockStudent.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
+        }
+      )
+      .addCase(
+        studentsThunks.getAllBlockedStudentsOfABatch.pending,
+        (state) => {
+          state.loading = true;
+          state.error = null;
+        }
+      )
+      .addCase(
+        studentsThunks.getAllBlockedStudentsOfABatch.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.blockedStudents = action.payload;
+        }
+      )
+      .addCase(
+        studentsThunks.getAllBlockedStudentsOfABatch.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
+        }
+      )
+      .addCase(studentsThunks.blockStudent.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        studentsThunks.blockStudent.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.students = state.students.filter(
+            (student) => student._id !== action.payload
+          );
+        }
+      )
+      .addCase(
+        studentsThunks.blockStudent.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+          messageError(action.payload);
+        }
+      )
       .addCase(studentsThunks.getAllStudentsOfABatch.pending, (state) => {
         state.loading = true;
         state.error = null;

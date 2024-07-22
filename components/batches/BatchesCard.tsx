@@ -9,29 +9,46 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { Button } from "../ui/button";
 
-const BatchesCard: React.FC<any> = ({ batch, isTeacher, route }) => {
+interface BatchesCardProps {
+  batch: any;
+  isTeacher?: boolean;
+  route: string;
+}
+
+const BatchesCard = ({ batch, isTeacher = false, route }: BatchesCardProps) => {
   return (
     <div
-      className="md:w-[400px] h-[350px] bg-background rounded-xl w-full  flex flex-col gap-2"
-      key={batch._id}
+      className="md:w-[400px] h-[350px] bg-background rounded-xl w-full flex flex-col gap-3"
+      key={batch?._id}
     >
       <Image
-        src={`https://picsum.photos/1200/300/?${batch.name}`}
-        alt={batch.name}
+        src={`https://picsum.photos/1200/300/?${batch?.name}`}
+        alt={batch?.name}
         width={1200}
         height={160}
-        className="rounded-xl !min-h-[160px]"
+        className="rounded-xl !object-cover !h-40"
       />
-      <div className="flex flex-col gap-2 p-3">
-        <h1 className="text-3xl font-bold">{batch.name}</h1>
-        <p className="text-sm font-semibold">Created by: {batch.owner.name}</p>
-        <p className="text-sm font-semibold">
-          No of students: {batch.students.length}
-        </p>
+      <div className="flex flex-col gap-4 p-3">
+        <Link
+          href={`/batches/${route}/${batch?._id}`}
+          // className="text-sm font-semibold px-4 py-3 bg-blue-600 rounded-lg"
+        >
+          <h1 className="text-2xl font-bold hover:underline cursor-pointer">
+            {batch?.name}
+          </h1>
+        </Link>
+
+        {/* <p className="text-sm font-semibold">Created by: {batch?.room}</p> */}
+
+        {/* <p className="text-sm font-semibold">Created by: {batch?.owner?.name}</p> */}
+        {/* <p className="text-sm font-semibold">
+          No of students: {batch?.students?.length}
+        </p> */}
 
         {isTeacher && (
-          <div className="flex gap-4 items-center px-2 pr-3">
+          <div className="flex gap-1 items-center px-2 pr-3">
             <p className="text-sm font-semibold">Code: </p>
 
             <Input defaultValue={batch.batchCode} readOnly={true} />
@@ -56,18 +73,16 @@ const BatchesCard: React.FC<any> = ({ batch, isTeacher, route }) => {
             </TooltipProvider>
           </div>
         )}
+
         <div className="flex gap-2 items-center">
-          <Link
-            href={`/dashboard/batches/${route}/${batch._id}`}
-            className="text-sm font-semibold px-4 py-3 bg-blue-600 rounded-lg"
-          >
-            View Details
+          <Link href={`/batches/${route}/${batch?._id}`} className="w-full">
+            <Button className="w-full">View Details</Button>
           </Link>
           <Link
-            href={`/dashboard/batches/${batch._id}/assignments`}
-            className="text-sm font-semibold px-4 py-3 bg-blue-600 rounded-lg"
+            href={`/batches/${route}/${batch?._id}/assignments`}
+            className="w-full"
           >
-            View Assignments
+            <Button className="w-full">View Assignments</Button>
           </Link>
         </div>
       </div>

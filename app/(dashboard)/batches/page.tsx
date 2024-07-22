@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 import BatchesCard from "@/components/batches/BatchesCard";
 import NoBatchesFoundCard from "@/components/batches/NoBatchesFoundCard";
 
-const Batches = () => {
+const BatchesPage = () => {
   const dispatch = useAppDispatch();
   const { batches } = useAppSelector((state) => state.batches);
 
@@ -18,10 +18,10 @@ const Batches = () => {
   return (
     <div className="w-full h-full flex flex-wrap gap-4 py-2 ">
       {batches.map((batch: any) => (
-        <BatchesCard key={batch._id} batch={batch} />
+        <BatchesCard key={batch._id} batch={batch} route="teaching" isTeacher />
       ))}
     </div>
   );
 };
 
-export default Batches;
+export default BatchesPage;

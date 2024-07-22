@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/theme/theme-provider";
 import StoreProvider from "./StoreProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { Navbar, SidebarNav } from "@/components/dashboard";
+import { Separator } from "@/components/ui/separator";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -27,7 +29,15 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <StoreProvider>
-            <main>{children}</main>
+            <main className="min-h-screen w-full flex flex-col">
+              <Navbar />
+              <Separator className="mt-3" />
+              <div className="w-full flex">
+                <SidebarNav />
+                <Separator orientation="vertical" className="h-screen mr-2" />
+                <section className="w-full p-4">{children}</section>
+              </div>
+            </main>
             <Toaster />
           </StoreProvider>
         </ThemeProvider>

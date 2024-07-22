@@ -19,13 +19,13 @@ export function BreadcrumbWithCustomSeparator() {
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink>
-            <Link href="/dashboard">Dashboard</Link>
+            <Link href="/">Dashboard</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink>
-            <Link href="/dashboard/batches">Batches</Link>
+            <Link href="/batches">Batches</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />

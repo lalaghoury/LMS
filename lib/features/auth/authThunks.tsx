@@ -64,7 +64,7 @@ export const authThunks = {
           messageSuccess(data.message);
           dispatch(signinAction({ user: data.user }));
           Cookies.set("auth", data.token, { expires: 7, path: "" });
-          router.push(redirectUrl ? redirectUrl : "/dashboard");
+          router.push(redirectUrl ? redirectUrl : "/");
           return data.user;
         }
       } catch (error: any) {

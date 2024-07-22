@@ -87,7 +87,7 @@ export default function SignInPage() {
               </div>
             </div>
 
-            <div className="grid gap-2" key={"name"}>
+            <div className="grid gap-2">
               <Label htmlFor={"email"}>{"Email"}</Label>
               <Input
                 id={"email"}
@@ -101,7 +101,7 @@ export default function SignInPage() {
                 </p>
               )}
             </div>
-            <div className="grid gap-2" key={"name"}>
+            <div className="grid gap-2">
               <Label htmlFor={"password"}>{"Password"}</Label>
               <Input
                 id={"password"}

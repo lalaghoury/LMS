@@ -28,7 +28,7 @@ export const batchThunks = {
         );
         if (data.success) {
           messageSuccess(data.message);
-          router.push(`/dashboard/batches/teaching/${data.batch._id}`);
+          router.push(`/batches/teaching/${data.batch._id}`);
           return data.batch;
         }
       } catch (error: any) {
@@ -100,7 +100,7 @@ export const batchThunks = {
         );
         if (data.success) {
           messageSuccess(data.message);
-          router.push(`/dashboard/batches/enrolled/${data.batch._id}`);
+          router.push(`/batches/enrolled/${data.batch._id}`);
           return data.batch;
         }
       } catch (error: any) {
@@ -133,10 +133,10 @@ export const batchThunks = {
   ),
   getABatchByIdAsStudent: createAsyncThunk(
     "batches/getABatchByIdAsStudent",
-    async (id: string, { rejectWithValue }) => {
+    async (batchId: string, { rejectWithValue }) => {
       try {
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/batches/enrolled/${id}`
+          `${process.env.NEXT_PUBLIC_API_URL}/batches/enrolled/${batchId}`
         );
         if (data.success) {
           return data.batch;
