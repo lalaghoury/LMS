@@ -43,16 +43,17 @@ export async function middleware(req: NextRequest, res: NextResponse) {
     if (
       error.response &&
       error.response.data &&
-      error.response.data.message === "You are not authorized to perform this action"
+      error.response.data.message ===
+        "You are not authorized to perform this action"
     ) {
       // Redirect to appropriate batch path
       return NextResponse.redirect(new URL(`/batches${apiPath}`, req.url));
     }
-  }
 
-  // Default to redirect to sign-in if not authorized and not in /auth path
-  if (!pathname.startsWith("/auth")) {
-    return NextResponse.redirect(new URL("/auth/sign-in", req.url));
+    // Default to redirect to sign-in if not authorized and not in /auth path
+    if (!pathname.startsWith("/auth")) {
+      return NextResponse.redirect(new URL("/auth/sign-in", req.url));
+    }
   }
 
   // Continue to next if none of the conditions were met
