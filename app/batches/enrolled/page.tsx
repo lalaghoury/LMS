@@ -8,13 +8,13 @@ import NoBatchesFoundCard from "@/components/batches/NoBatchesFoundCard";
 
 const EnrolledBatches = () => {
   const dispatch = useAppDispatch();
-  const { batches } = useAppSelector((state) => state.batches);
+  const { loading, batches } = useAppSelector((state) => state.batches);
 
   useEffect(() => {
     dispatch(batchThunks.getAllBatchesAsStudent());
   }, [dispatch]);
 
-  if (batches.length === 0) return <NoBatchesFoundCard />;
+  if (!loading && batches.length === 0) return <NoBatchesFoundCard />;
 
   return (
     <div className="w-full h-full flex flex-wrap gap-4 py-2 ">

@@ -33,6 +33,17 @@ export function SidebarNav() {
     },
   ];
 
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsCollapsed(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const [isCollapsed, setIsCollapsed] = React.useState(true);
 
   return (

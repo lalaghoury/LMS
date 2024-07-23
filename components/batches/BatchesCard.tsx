@@ -10,6 +10,7 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { Button } from "../ui/button";
+import { Card } from "@/components/ui/card";
 
 interface BatchesCardProps {
   batch: any;
@@ -19,7 +20,7 @@ interface BatchesCardProps {
 
 const BatchesCard = ({ batch, isTeacher = false, route }: BatchesCardProps) => {
   return (
-    <div
+    <Card
       className="md:w-[400px] h-[350px] bg-background rounded-xl w-full flex flex-col gap-3"
       key={batch?._id}
     >
@@ -86,7 +87,7 @@ const BatchesCard = ({ batch, isTeacher = false, route }: BatchesCardProps) => {
           </Link>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

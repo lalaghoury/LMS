@@ -16,10 +16,3 @@ export const createBatchConstants = [
     name: "room",
   },
 ];
-
-
-
-
-export const students = [
- 
-];
