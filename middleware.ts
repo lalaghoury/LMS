@@ -10,6 +10,12 @@ export async function middleware(req: NextRequest, res: NextResponse) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }
 
+  if (!token && req.nextUrl.pathname.startsWith("/auth")) {
+    return NextResponse.next();
+  } else if (!token && !req.nextUrl.pathname.startsWith("/auth")) {
+    return NextResponse.redirect(new URL("/auth/sign-in", req.url));
+  }
+
   axios.defaults.withCredentials = true;
 
   const { pathname } = req.nextUrl;
