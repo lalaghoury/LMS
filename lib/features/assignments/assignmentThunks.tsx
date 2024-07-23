@@ -25,17 +25,16 @@ export const assignmentThunks = {
         );
         const { success, assignment, message } = data;
         if (success) {
-          messageSuccess(message);
           router.push(
             `/batches/teaching/${batchId}/assignments/${assignment._id}`
           );
           return assignment;
         }
       } catch (error: any) {
-        console.error(
-          "Error Creating Assignment:",
-          error.response.data.message
-        );
+        // console.error(
+        //   "Error Creating Assignment:",
+        //   error.response.data.message
+        // );
         return rejectWithValue(
           error.response.data.message ??
             "Error Creating Assignment, please try again!"
@@ -53,14 +52,13 @@ export const assignmentThunks = {
         );
         const { success, assignments, message } = data;
         if (success) {
-          messageSuccess(message);
           return assignments;
         }
       } catch (error: any) {
-        console.error(
-          "Error Getting Assignments:",
-          error.response.data.message
-        );
+        // console.error(
+        //   "Error Getting Assignments:",
+        //   error.response.data.message
+        // );
         return rejectWithValue(
           error.response.data.message ??
             "Error Getting Assignments, please try again!"
@@ -85,11 +83,10 @@ export const assignmentThunks = {
         );
         const { success, assignment, isSubmitted, message } = data;
         if (success) {
-          messageSuccess(message);
           return { ...assignment, isSubmitted };
         }
       } catch (error: any) {
-        console.error("Error Getting Assignment:", error.response.data.message);
+        // console.error("Error Getting Assignment:", error.response.data.message);
         return rejectWithValue(
           error.response.data.message ??
             "Error Getting Assignment, please try again!"
@@ -110,11 +107,10 @@ export const assignmentThunks = {
         );
         const { success, submission, message } = data;
         if (success) {
-          messageSuccess(message);
           return submission;
         }
       } catch (error: any) {
-        console.error("Error Getting Assignment:", error.response.data.message);
+        // console.error("Error Getting Assignment:", error.response.data.message);
         return rejectWithValue(
           error.response.data.message ??
             "Error Getting Assignment, please try again!"
@@ -153,10 +149,10 @@ export const assignmentThunks = {
           return data.assignment;
         }
       } catch (error: any) {
-        console.error(
-          "Error Handing In Assignment Assignment:",
-          error.response.data.message
-        );
+        // console.error(
+        //   "Error Handing In Assignment Assignment:",
+        //   error.response.data.message
+        // );
         return rejectWithValue(
           error.response.data.message ??
             "Error Handing In Assignment, please try again!"

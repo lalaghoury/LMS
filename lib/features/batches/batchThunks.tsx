@@ -32,7 +32,7 @@ export const batchThunks = {
           return data.batch;
         }
       } catch (error: any) {
-        console.error("Error Creating Batch:", error.response.data.message);
+        // console.error("Error Creating Batch:", error.response.data.message);
         return rejectWithValue("Error Creating Batch, please try again!");
       }
     }
@@ -48,7 +48,7 @@ export const batchThunks = {
           return data.batches;
         }
       } catch (error: any) {
-        console.error("Error Getting Batches:", error.response.data.message);
+        // console.error("Error Getting Batches:", error.response.data.message);
         return rejectWithValue("Error Getting Batches, please try again!");
       }
     }
@@ -64,7 +64,7 @@ export const batchThunks = {
           return data.batches;
         }
       } catch (error: any) {
-        console.error("Error Getting Batches:", error.response.data.message);
+        // console.error("Error Getting Batches:", error.response.data.message);
         return rejectWithValue("Error Getting Batches, please try again!");
       }
     }
@@ -80,7 +80,7 @@ export const batchThunks = {
           return data.batch;
         }
       } catch (error: any) {
-        console.error("Error Getting Batch:", error.response.data.message);
+        // console.error("Error Getting Batch:", error.response.data.message);
         return rejectWithValue(
           error.response.data.message ??
             "Error Getting Batch, please try again!"
@@ -104,7 +104,7 @@ export const batchThunks = {
           return data.batch;
         }
       } catch (error: any) {
-        console.error("Error Joining Batch:", error.response.data.message);
+        // console.error("Error Joining Batch:", error.response.data.message);
         return rejectWithValue(
           error.response.data.message ??
             "Error Joining Batch, please try again!"
@@ -123,7 +123,7 @@ export const batchThunks = {
           return data.batch;
         }
       } catch (error: any) {
-        console.error("Error Getting Batch:", error.response.data.message);
+        // console.error("Error Getting Batch:", error.response.data.message);
         return rejectWithValue(
           error.response.data.message ??
             "Error Getting Batch, please try again!"
@@ -142,7 +142,7 @@ export const batchThunks = {
           return data.batch;
         }
       } catch (error: any) {
-        console.error("Error Getting Batch:", error.response.data.message);
+        // console.error("Error Getting Batch:", error.response.data.message);
         return rejectWithValue(
           error.response.data.message ??
             "Error Getting Batch, please try again!"

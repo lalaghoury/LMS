@@ -45,7 +45,7 @@ const AddNewStudentsDialog: React.FC<AddNewStudentsDialogProps> = ({
         alert("Link copied!");
       },
       (err) => {
-        console.error("Could not copy text: ", err);
+        // console.error("Could not copy text: ", err);
       }
     );
   };

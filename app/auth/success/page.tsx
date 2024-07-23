@@ -32,7 +32,7 @@ const OAuthSuccessPage = () => {
           redirectUrl && Cookies.remove("redirectUrl");
         }
       } catch (error: any) {
-        console.log(error.response.data.message || error.message);
+        // console.error(error.response.data.message || error.message);
         router.push("/auth/sign-in");
       } finally {
         setLoading(false);

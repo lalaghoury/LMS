@@ -32,7 +32,7 @@ export const authThunks = {
           return true;
         }
       } catch (error: any) {
-        console.error("Error signing up:", error.response.data.message);
+        // console.error("Error signing up:", error.response.data.message);
         return rejectWithValue(
           error.response.data.message ?? "Error signing up, please try again"
         );
@@ -68,8 +68,7 @@ export const authThunks = {
           return data.user;
         }
       } catch (error: any) {
-        console.log("🚀 ~ error:", error);
-        console.error("Error signing in:", error.response.data.message);
+        // console.error("Error signing in:", error.response.data.message);
         return rejectWithValue(
           error.response.data.message ?? "Error signing in, please try again!"
         );
@@ -85,11 +84,12 @@ export const authThunks = {
           `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-out`
         );
         if (data.success) {
+          messageSuccess(data.message);
           router.push("/auth/sign-in");
           return true;
         }
       } catch (error: any) {
-        console.error("Error logging out:", error.response.data.message);
+        // console.error("Error logging out:", error.response.data.message);
         return rejectWithValue(
           error.response.data.message ?? "Error logging out, please try again!"
         );
@@ -114,7 +114,7 @@ export const authThunks = {
           return data.user;
         }
       } catch (error: any) {
-        console.error("Error Updating user:", error.response.data);
+        // console.error("Error Updating user:", error.response.data);
         return rejectWithValue(
           error.response.data.message ?? "Error updating user"
         );
@@ -134,7 +134,7 @@ export const authThunks = {
           return data.user._id;
         }
       } catch (error: any) {
-        console.error("Error deleting user:", error.response.data);
+        // console.error("Error deleting user:", error.response.data);
         return rejectWithValue(
           error.response.data.message ?? "Error deleting user"
         );

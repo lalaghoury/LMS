@@ -23,10 +23,10 @@ export const submissionThunks = {
           return data.submissions;
         }
       } catch (error: any) {
-        console.error(
-          "Error Getting Submissions:",
-          error.response.data.message
-        );
+        // console.error(
+        //   "Error Getting Submissions:",
+        //   error.response.data.message
+        // );
         if (
           error.response.data.message ===
           "You are not authorized to perform this action"
@@ -67,7 +67,7 @@ export const submissionThunks = {
           return data.submission;
         }
       } catch (error: any) {
-        console.error("Error Getting Submission:", error.response.data.message);
+        // console.error("Error Getting Submission:", error.response.data.message);
         if (
           error.response.data.message ===
           "You are not authorized to perform this action"
@@ -109,7 +109,7 @@ export const submissionThunks = {
           return data.submission;
         }
       } catch (error: any) {
-        console.error("Error Updating Grade:", error.response.data.message);
+        // console.error("Error Updating Grade:", error.response.data.message);
         if (
           error.response.data.message ===
           "You are not authorized to perform this action"

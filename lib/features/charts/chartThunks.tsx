@@ -12,7 +12,6 @@ export const chartThunks = {
           `${process.env.NEXT_PUBLIC_API_URL}/batches/chart/initialize`
         );
         if (data.success) {
-          messageSuccess(data.message);
           return data;
         }
       } catch (error: any) {
